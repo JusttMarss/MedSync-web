@@ -24,5 +24,10 @@ export interface SharedProps {
             role: string;
         } | null;
     };
+    flash?: {
+        success?: string;
+        error?: string;
+        info?: string;
+    };
     appName: string;
 }

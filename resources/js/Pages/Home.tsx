@@ -10,35 +10,50 @@ interface HomeProps {
 export default function Home({ stats, featuredDoctors }: HomeProps) {
     return (
         <MainLayout>
-            <Head title="Beranda" />
+            <Head title="Home" />
 
-            {/* ── Hero Section ───────────────────────────── */}
-            <section className="hero">
-                <div className="hero-content">
-                    <h1>Kesehatan Anda, Prioritas Kami</h1>
-                    <p>
-                        Platform layanan kesehatan digital terpercaya. Temukan dokter spesialis,
-                        buat janji temu, dan kelola rekam medis Anda dengan mudah.
-                    </p>
-                    <div className="hero-actions">
-                        <Link href="/doctors" className="btn btn-primary">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                            </svg>
-                            Cari Dokter
-                        </Link>
-                        <a href="#features" className="btn btn-outline">
-                            Pelajari Selengkapnya
-                        </a>
+            <section className="home-hero">
+                <div className="hero-grid">
+                    <div className="hero-copy">
+                        <span className="eyebrow">Top Rated Clinic 2024</span>
+                        <h1>Your Health, Simplified.</h1>
+                        <p>Experience modern healthcare with seamless appointment booking, expert specialists, and instant access to your medical records all in one place.</p>
+
+                        <div className="hero-actions">
+                            <Link href="/appointments" className="btn btn-primary">
+                                Book Appointment
+                            </Link>
+                            <Link href="/doctors" className="btn btn-outline">
+                                Find a Doctor
+                            </Link>
+                        </div>
+
+                        <div className="hero-trust">
+                            <div className="avatar-stack">
+                                <div className="avatar">A</div>
+                                <div className="avatar">B</div>
+                                <div className="avatar">C</div>
+                            </div>
+                            <span>Trusted by 10,000+ patients</span>
+                        </div>
+                    </div>
+
+                    <div className="hero-visual">
+                        <div className="hero-card">
+                            <img src="https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=600&q=80" alt="Doctor with tablet" className="hero-image" />
+                            <div className="hero-badge">
+                                <span className="material-symbols-outlined">calendar_month</span>
+                                <div>
+                                    <div className="badge-label">Next Available</div>
+                                    <div className="badge-value">Today, 2:30 PM</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* ── Stats Section ──────────────────────────── */}
-            <section className="stats-section">
+            <section className="section stats-section">
                 <div className="stats-grid">
                     <div className="stat-card">
                         <div className="stat-icon">🩺</div>
@@ -58,63 +73,30 @@ export default function Home({ stats, featuredDoctors }: HomeProps) {
                 </div>
             </section>
 
-            {/* ── Featured Doctors ────────────────────────── */}
-            {featuredDoctors.length > 0 && (
-                <section className="section">
-                    <div className="section-header">
-                        <h2>Dokter Pilihan</h2>
-                        <p>Temui dokter spesialis kami yang berpengalaman dan terpercaya.</p>
-                    </div>
-                    <div className="doctors-grid">
-                        {featuredDoctors.map((doctor) => (
-                            <div key={doctor.id} className="doctor-card">
-                                <div className="doctor-card-header">
-                                    <div className="doctor-avatar">
-                                        {doctor.name?.charAt(0).toUpperCase()}
-                                    </div>
-                                    <div className="doctor-info">
-                                        <h3>{doctor.name}</h3>
-                                        <span className="doctor-specialization">
-                                            {doctor.specialization}
-                                        </span>
-                                    </div>
-                                </div>
-                                {doctor.bio && (
-                                    <p className="doctor-bio">{doctor.bio}</p>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-                    <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-                        <Link href="/doctors" className="btn btn-outline">
-                            Lihat Semua Dokter →
-                        </Link>
-                    </div>
-                </section>
-            )}
-
-            {/* ── Features Section ───────────────────────── */}
-            <section className="section" id="features">
+            <section className="section">
                 <div className="section-header">
-                    <h2>Layanan Kami</h2>
-                    <p>Solusi kesehatan digital lengkap untuk Anda.</p>
+                    <h2>Find your Doctor</h2>
+                    <p>Browse our directory of specialized medical professionals. Filter by specialization and availability to find the right care for your needs today.</p>
                 </div>
-                <div className="features-grid">
-                    <div className="feature-card">
-                        <div className="feature-icon">🔍</div>
-                        <h3>Cari Dokter</h3>
-                        <p>Temukan dokter spesialis yang sesuai dengan kebutuhan kesehatan Anda.</p>
-                    </div>
-                    <div className="feature-card">
-                        <div className="feature-icon">📅</div>
-                        <h3>Buat Janji Temu</h3>
-                        <p>Atur jadwal konsultasi dengan dokter pilihan Anda secara online.</p>
-                    </div>
-                    <div className="feature-card">
-                        <div className="feature-icon">📄</div>
-                        <h3>Rekam Medis</h3>
-                        <p>Akses riwayat kesehatan dan rekam medis Anda kapan saja, di mana saja.</p>
-                    </div>
+                <div className="doctors-grid">
+                    {featuredDoctors.map((doctor) => (
+                        <div key={doctor.id} className="doctor-card alt">
+                            <div className="doctor-card-header">
+                                <div className="doctor-avatar">{doctor.name?.charAt(0)}</div>
+                                <div>
+                                    <h3>{doctor.name}</h3>
+                                    <p className="text-secondary">{doctor.specialization}</p>
+                                </div>
+                            </div>
+                            <div className="doctor-card-body">
+                                <p>{doctor.bio || 'Experienced provider ready to support your care.'}</p>
+                            </div>
+                            <div className="doctor-card-footer">
+                                <span className="badge badge-available">Available Today</span>
+                                <Link href="/appointments" className="btn btn-primary btn-sm">Book Appointment</Link>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </section>
         </MainLayout>
