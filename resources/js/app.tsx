@@ -7,7 +7,7 @@ interface PageModule {
 }
 
 createInertiaApp({
-    title: (title: string) => (title ? `${title} — Healthcare App` : 'Healthcare App'),
+    title: (title: string) => (title ? `${title} — MedSync Pro` : 'MedSync Pro'),
     resolve: (name: string) => {
         const pages = import.meta.glob<PageModule>('./Pages/**/*.tsx', { eager: true });
         return pages[`./Pages/${name}.tsx`];
