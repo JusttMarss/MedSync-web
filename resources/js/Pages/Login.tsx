@@ -58,7 +58,9 @@ export default function Login() {
                                 Remember me
                             </label>
 
-                            <button className="btn btn-primary" type="submit">Sign In</button>
+                            <div style={{ marginTop: '1rem' }}>
+                                <button className="btn btn-primary" type="submit" style={{ width: '100%' }}>Sign In</button>
+                            </div>
                         </form>
                         <div className="auth-footer">
                             <p>Don't have an account? <Link href="/register" className="link">Sign up</Link></p>

@@ -4,42 +4,57 @@
 :root {
     --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 
-    /* Primary palette */
-    --color-primary: #00526d;
-    --color-primary-strong: #073b56;
-    --color-primary-soft: #c0e8ff;
-    --color-secondary: #00687a;
-    --color-accent: #4eafc2;
-
-    /* Backgrounds */
-    --color-background: #f8f9ff;
-    --color-surface: #ffffff;
-    --color-surface-alt: #eef4ff;
-    --color-surface-muted: #dde9fc;
+    /* Premium Medical Palette */
+    --color-primary: #0f769f; /* Vibrant Medical Blue */
+    --color-primary-strong: #0a5a7a;
+    --color-primary-soft: #e0f2fe;
+    --color-secondary: #0ea5e9; /* Sky Blue */
+    --color-accent: #38bdf8;
+    
+    /* Backgrounds - Softer and more modern */
+    --color-background: #f4f7f9;
+    --color-surface: rgba(255, 255, 255, 0.85); /* Slightly transparent for glass effect */
+    --color-surface-solid: #ffffff;
+    --color-surface-alt: #f0f6fa;
+    --color-surface-muted: #e1eaf2;
 
     /* Text */
-    --color-text: #101c2a;
-    --color-text-muted: #6b7c93;
-    --color-border: #d8e2ec;
+    --color-text: #0f172a; /* Slate 900 */
+    --color-text-muted: #64748b; /* Slate 500 */
+    --color-border: rgba(148, 163, 184, 0.2);
 
-    /* Shadows */
-    --shadow-card: 0 18px 45px rgba(30, 70, 112, 0.08);
-    --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.08);
+    /* Shadows - Deep, soft, and modern */
+    --shadow-card: 0 20px 40px -10px rgba(15, 118, 159, 0.08);
+    --shadow-soft: 0 10px 30px -5px rgba(15, 118, 159, 0.05);
+    --shadow-glow: 0 0 20px rgba(15, 118, 159, 0.15);
 
-    /* Radius */
-    --radius-sm: 12px;
-    --radius-md: 20px;
-    --radius-lg: 28px;
-    --radius-full: 9999px;
-
-    --gradient-button: linear-gradient(135deg, #0e6a84 0%, #0b8bb2 100%);
-    --gradient-soft: linear-gradient(135deg, rgba(248, 249, 255, 0.95), rgba(222, 233, 255, 0.95));
+    /* Gradients */
+    --gradient-button: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    --gradient-hero: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    --gradient-soft: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(240,249,255,0.7));
 
     /* Radius */
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 20px;
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
     --radius-full: 9999px;
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    box-shadow: var(--shadow-card);
+}
+
+.glass-nav {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 /* ─── Global Reset & Base ──────────────────────────────────────── */
