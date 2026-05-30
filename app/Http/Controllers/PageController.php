@@ -103,6 +103,7 @@ class PageController extends Controller
                 'date' => $a->timeSlot?->date,
                 'time' => $a->timeSlot?->start_time . ' - ' . $a->timeSlot?->end_time,
                 'status' => $a->status,
+                'notes' => $a->notes,
             ]);
 
         $doctors = Doctor::with('user')
@@ -111,6 +112,7 @@ class PageController extends Controller
             ->map(fn($d) => [
                 'id' => $d->id,
                 'name' => $d->user?->name,
+                'specialization' => $d->specialization,
             ]);
 
         $timeSlots = TimeSlot::with('doctor')
