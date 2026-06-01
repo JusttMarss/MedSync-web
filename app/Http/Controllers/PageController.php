@@ -17,6 +17,20 @@ class PageController extends Controller
      */
     public function home()
     {
+        $todaySlots = TimeSlot::with('doctor.user')
+            ->whereDate('date', today())
+            ->where('is_booked', false)
+            ->orderBy('start_time')
+            ->limit(8)
+            ->get()
+            ->map(fn($slot) => [
+                'id'             => $slot->id,
+                'doctorName'     => $slot->doctor?->user?->name,
+                'specialization' => $slot->doctor?->specialization,
+                'startTime'      => \Carbon\Carbon::parse($slot->start_time)->format('H:i'),
+                'endTime'        => \Carbon\Carbon::parse($slot->end_time)->format('H:i'),
+            ]);
+
         return Inertia::render('Home', [
             'stats' => [
                 'doctors'      => Doctor::whereHas('user', fn($q) => $q->where('is_active', true))->count(),
@@ -34,6 +48,7 @@ class PageController extends Controller
                     'specialization' => $d->specialization,
                     'bio'            => $d->bio,
                 ]),
+            'todaySlots' => $todaySlots,
         ]);
     }
 
@@ -66,7 +81,6 @@ class PageController extends Controller
             'bio'            => $d->bio,
         ]);
 
-        // Ambil daftar spesialisasi unik untuk filter dropdown
         $specializations = Doctor::whereHas('user', fn($q) => $q->where('is_active', true))
             ->distinct()
             ->pluck('specialization')
@@ -97,19 +111,19 @@ class PageController extends Controller
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(fn($a) => [
-                'id' => $a->id,
-                'doctor' => $a->doctor?->user?->name,
+                'id'             => $a->id,
+                'doctor'         => $a->doctor?->user?->name,
                 'specialization' => $a->doctor?->specialization,
-                'date' => $a->timeSlot?->date,
-                'time' => $a->timeSlot?->start_time . ' - ' . $a->timeSlot?->end_time,
-                'status' => $a->status,
+                'date'           => $a->timeSlot?->date,
+                'time'           => $a->timeSlot?->start_time . ' - ' . $a->timeSlot?->end_time,
+                'status'         => $a->status,
             ]);
 
         $doctors = Doctor::with('user')
             ->whereHas('user', fn($q) => $q->where('is_active', true))
             ->get()
             ->map(fn($d) => [
-                'id' => $d->id,
+                'id'   => $d->id,
                 'name' => $d->user?->name,
             ]);
 
@@ -118,18 +132,18 @@ class PageController extends Controller
             ->orderBy('date')
             ->get()
             ->map(fn($t) => [
-                'id' => $t->id,
-                'doctor_id' => $t->doctor_id,
+                'id'          => $t->id,
+                'doctor_id'   => $t->doctor_id,
                 'doctor_name' => $t->doctor?->user?->name,
-                'date' => $t->date,
-                'start_time' => $t->start_time,
-                'end_time' => $t->end_time,
+                'date'        => $t->date,
+                'start_time'  => $t->start_time,
+                'end_time'    => $t->end_time,
             ]);
 
         return Inertia::render('Appointments', [
             'appointments' => $appointments,
-            'doctors' => $doctors,
-            'timeSlots' => $timeSlots,
+            'doctors'      => $doctors,
+            'timeSlots'    => $timeSlots,
         ]);
     }
 
@@ -140,14 +154,14 @@ class PageController extends Controller
     {
         $doctors = Doctor::with(['timeSlots' => fn($q) => $q->orderBy('date')])->get()
             ->map(fn($d) => [
-                'id' => $d->id,
-                'name' => $d->user?->name,
+                'id'        => $d->id,
+                'name'      => $d->user?->name,
                 'timeSlots' => $d->timeSlots->map(fn($t) => [
-                    'id' => $t->id,
-                    'date' => $t->date,
+                    'id'         => $t->id,
+                    'date'       => $t->date,
                     'start_time' => $t->start_time,
-                    'end_time' => $t->end_time,
-                    'is_booked' => (bool) $t->is_booked,
+                    'end_time'   => $t->end_time,
+                    'is_booked'  => (bool) $t->is_booked,
                 ]),
             ]);
 
@@ -168,7 +182,7 @@ class PageController extends Controller
         }
 
         return Inertia::render('Profile', [
-            'user' => $user,
+            'user'    => $user,
             'patient' => $patient,
         ]);
     }
@@ -191,18 +205,18 @@ class PageController extends Controller
 
             if ($upcomingAppointment) {
                 $upcoming = [
-                    'doctor' => $upcomingAppointment->doctor?->user?->name,
+                    'doctor'         => $upcomingAppointment->doctor?->user?->name,
                     'specialization' => $upcomingAppointment->doctor?->specialization,
-                    'date' => $upcomingAppointment->timeSlot?->date,
-                    'time' => $upcomingAppointment->timeSlot?->start_time . ' - ' . $upcomingAppointment->timeSlot?->end_time,
+                    'date'           => $upcomingAppointment->timeSlot?->date,
+                    'time'           => $upcomingAppointment->timeSlot?->start_time . ' - ' . $upcomingAppointment->timeSlot?->end_time,
                 ];
             }
         }
 
         return Inertia::render('Dashboard', [
             'stats' => [
-                'doctors' => Doctor::whereHas('user', fn($q) => $q->where('is_active', true))->count(),
-                'patients' => Patient::count(),
+                'doctors'      => Doctor::whereHas('user', fn($q) => $q->where('is_active', true))->count(),
+                'patients'     => Patient::count(),
                 'appointments' => Appointment::count(),
             ],
             'upcoming' => $upcoming,
