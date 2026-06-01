@@ -1218,3 +1218,20 @@ img {
         min-width: 100%;
     }
 }
+
+@keyframes floatA {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-5px); }
+}
+@keyframes floatB {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-7px); }
+}
+@keyframes floatC {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-5px); }
+}
+@keyframes fadePulse {
+    0%, 100% { opacity: 0.55; }
+    50%       { opacity: 0.9; }
+}
