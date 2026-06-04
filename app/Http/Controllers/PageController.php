@@ -125,6 +125,7 @@ class PageController extends Controller
             ->map(fn($d) => [
                 'id'   => $d->id,
                 'name' => $d->user?->name,
+                'specialization' => $d->specialization,
             ]);
 
         $timeSlots = TimeSlot::with('doctor')
