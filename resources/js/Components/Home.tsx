@@ -16,7 +16,7 @@ import type { TimeSlot } from '../Components/TodaySlotsSection';
 interface HomeProps {
     stats: Stats;
     featuredDoctors: Doctor[];
-    todaySlots?: TimeSlot[];
+    todaySlots?: TimeSlot[]; // opsional — diisi dari backend, fallback ke demo data
 }
 
 export default function Home({ stats, featuredDoctors, todaySlots }: HomeProps) {
@@ -24,15 +24,34 @@ export default function Home({ stats, featuredDoctors, todaySlots }: HomeProps) 
         <MainLayout>
             <Head title="Home" />
 
+            {/* 1. Hero */}
             <HeroSection />
+
+            {/* 2. Stats */}
             <StatsSection stats={stats} />
+
+            {/* 3. How it Works */}
             <HowItWorksSection />
+
+            {/* 4. Spesialisasi */}
             <SpecializationSection />
+
+            {/* 5. Kenapa Pilih Kami */}
             <WhyUsSection />
+
+            {/* 6. Slot Tersedia Hari Ini */}
             <TodaySlotsSection slots={todaySlots} />
+
+            {/* 7. Dokter Unggulan */}
             <DoctorListSection doctors={featuredDoctors} />
+
+            {/* 8. Testimoni */}
             <TestimoniSection />
+
+            {/* 9. FAQ */}
             <FaqSection />
+
+            {/* 10. CTA Banner */}
             <CtaBannerSection />
         </MainLayout>
     );
