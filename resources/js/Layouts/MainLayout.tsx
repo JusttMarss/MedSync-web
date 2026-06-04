@@ -20,6 +20,36 @@ const pageVariants = {
     exit: { opacity: 0, y: -15, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }
 };
 
+function getAuthLinks(role: string | null | undefined) {
+    switch (role) {
+        case 'admin':
+            return [
+                { href: '/dashboard', label: 'Dashboard' },
+                { href: '/profile', label: 'Profile' },
+            ];
+        case 'doctor':
+            return [
+                { href: '/dashboard', label: 'Dashboard' },
+                { href: '/profile', label: 'Profile' },
+            ];
+        default: // patient
+            return [
+                { href: '/dashboard', label: 'Dashboard' },
+                { href: '/appointments', label: 'Appointments' },
+                { href: '/schedule', label: 'Schedule' },
+                { href: '/profile', label: 'Profile' },
+            ];
+    }
+}
+
+function getRoleLabel(role: string | null | undefined): string {
+    switch (role) {
+        case 'admin': return 'Admin Panel';
+        case 'doctor': return 'Doctor Portal';
+        default: return 'Patient Portal';
+    }
+}
+
 export default function MainLayout({ children }: MainLayoutProps) {
     const { props, url } = usePage<SharedProps>();
 
@@ -28,24 +58,23 @@ export default function MainLayout({ children }: MainLayoutProps) {
         { href: '/doctors', label: 'Doctors' },
     ];
 
+    const userRole = props.auth?.user?.role;
+
     const authLinks = props.auth?.user
-        ? [
-            { href: '/dashboard', label: 'Dashboard' },
-            { href: '/appointments', label: 'Appointments' },
-            { href: '/schedule', label: 'Schedule' },
-            { href: '/profile', label: 'Profile' },
-        ]
+        ? getAuthLinks(userRole)
         : [
             { href: '/login', label: 'Login' },
             { href: '/register', label: 'Sign Up' },
         ];
+
+    const roleLabel = getRoleLabel(userRole);
 
     return (
         <>
             <IntroAnimation />
             {props.auth?.user ? (
                 <div className="app-shell">
-                    <Sidebar authLinks={authLinks} />
+                    <Sidebar authLinks={authLinks} roleLabel={roleLabel} />
 
                     <div className="app-main">
                         <Topbar />

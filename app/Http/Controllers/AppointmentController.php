@@ -54,4 +54,37 @@ class AppointmentController extends Controller
 
         return Redirect::route('appointments')->with('success', 'Appointment berhasil dibuat. Konfirmasi telah dikirim ke email Anda.');
     }
+
+    /**
+     * Update status of an appointment (e.g. Complete / Cancel).
+     */
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|string|in:pending,scheduled,confirmed,completed,cancelled',
+        ]);
+
+        $appointment = Appointment::findOrFail($id);
+        $user = $request->user();
+
+        // Security check: Only the doctor assigned to this appointment, or admin can update status
+        if ($user->role?->value === 'doctor' || $user->role === 'doctor') {
+            if ($appointment->doctor_id !== $user->doctor?->id) {
+                abort(403, 'Unauthorized action.');
+            }
+        } elseif ($user->role?->value !== 'admin' && $user->role !== 'admin') {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $appointment->update([
+            'status' => $request->status,
+        ]);
+
+        // If status becomes cancelled, release the time slot
+        if ($request->status === 'cancelled') {
+            $appointment->timeSlot?->update(['is_booked' => false]);
+        }
+
+        return Redirect::back()->with('success', 'Status appointment berhasil diperbarui.');
+    }
 }
