@@ -117,6 +117,7 @@ class PageController extends Controller
                 'date'           => $a->timeSlot?->date,
                 'time'           => $a->timeSlot?->start_time . ' - ' . $a->timeSlot?->end_time,
                 'status'         => $a->status,
+                'notes'          => $a->notes,
             ]);
 
         $doctors = Doctor::with('user')
@@ -189,11 +190,214 @@ class PageController extends Controller
     }
 
     /**
-     * Dashboard page — reuse stats from home but render Dashboard.
+     * Dashboard page — route berdasarkan role user.
      */
     public function dashboard(Request $request)
     {
         $user = $request->user();
+        $role = $user->role?->value ?? $user->role;
+
+        if ($role === 'admin') {
+            return $this->adminDashboard($user);
+        }
+
+        if ($role === 'doctor') {
+            return $this->doctorDashboard($user);
+        }
+
+        return $this->patientDashboard($user);
+    }
+
+    /**
+     * Admin Dashboard — overview seluruh sistem.
+     */
+    private function adminDashboard($user)
+    {
+        $totalDoctors = Doctor::count();
+        $totalPatients = Patient::count();
+        $totalAppointments = Appointment::count();
+        $pendingAppointments = Appointment::whereIn('status', ['pending', 'scheduled'])->count();
+        $completedAppointments = Appointment::where('status', 'completed')->count();
+        $cancelledAppointments = Appointment::where('status', 'cancelled')->count();
+
+        $recentAppointments = Appointment::with(['doctor.user', 'patient.user', 'timeSlot'])
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get()
+            ->map(fn($a) => [
+                'id'             => $a->id,
+                'patient'        => $a->patient?->user?->name,
+                'doctor'         => $a->doctor?->user?->name,
+                'specialization' => $a->doctor?->specialization,
+                'date'           => $a->timeSlot?->date,
+                'time'           => $a->timeSlot?->start_time . ' - ' . $a->timeSlot?->end_time,
+                'status'         => $a->status?->value ?? $a->status,
+                'notes'          => $a->notes,
+                'created_at'     => $a->created_at?->format('d M Y'),
+            ]);
+
+        $recentPatients = Patient::with('user')
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get()
+            ->map(fn($p) => [
+                'id'     => $p->id,
+                'name'   => $p->user?->name,
+                'email'  => $p->user?->email,
+                'phone'  => $p->phone,
+                'gender' => $p->gender?->value ?? $p->gender,
+                'joined' => $p->created_at?->format('d M Y'),
+            ]);
+
+        // Get full lists for CRUD
+        $allDoctors = Doctor::with('user')
+            ->get()
+            ->map(fn($d) => [
+                'id'             => $d->id,
+                'name'           => $d->user?->name,
+                'email'          => $d->user?->email,
+                'specialization' => $d->specialization,
+                'phone'          => $d->phone,
+                'bio'            => $d->bio,
+                'is_active'      => $d->user?->is_active ?? true,
+            ]);
+
+        $allPatients = Patient::with('user')
+            ->get()
+            ->map(fn($p) => [
+                'id'            => $p->id,
+                'name'          => $p->user?->name,
+                'email'         => $p->user?->email,
+                'date_of_birth' => $p->date_of_birth,
+                'gender'        => $p->gender?->value ?? $p->gender,
+                'address'       => $p->address,
+                'phone'         => $p->phone,
+            ]);
+
+        $allAppointments = Appointment::with(['doctor.user', 'patient.user', 'timeSlot'])
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(fn($a) => [
+                'id'             => $a->id,
+                'patient'        => $a->patient?->user?->name,
+                'doctor'         => $a->doctor?->user?->name,
+                'specialization' => $a->doctor?->specialization,
+                'date'           => $a->timeSlot?->date,
+                'time'           => $a->timeSlot?->start_time . ' - ' . $a->timeSlot?->end_time,
+                'status'         => $a->status?->value ?? $a->status,
+                'notes'          => $a->notes,
+                'created_at'     => $a->created_at?->format('d M Y'),
+            ]);
+
+        return Inertia::render('AdminDashboard', [
+            'userName' => $user->name,
+            'stats' => [
+                'doctors'      => $totalDoctors,
+                'patients'     => $totalPatients,
+                'appointments' => $totalAppointments,
+                'pending'      => $pendingAppointments,
+                'completed'    => $completedAppointments,
+                'cancelled'    => $cancelledAppointments,
+            ],
+            'recentAppointments' => $recentAppointments,
+            'recentPatients'     => $recentPatients,
+            'allDoctors'         => $allDoctors,
+            'allPatients'        => $allPatients,
+            'allAppointments'    => $allAppointments,
+        ]);
+    }
+
+    /**
+     * Doctor Dashboard — overview jadwal dan pasien dokter.
+     */
+    private function doctorDashboard($user)
+    {
+        $doctor = $user->doctor;
+
+        if (!$doctor) {
+            return Inertia::render('DoctorDashboard', [
+                'userName' => $user->name,
+                'stats' => [
+                    'todayPatients'    => 0,
+                    'upcomingTotal'    => 0,
+                    'completedWeek'   => 0,
+                    'availableSlots'   => 0,
+                ],
+                'todaySchedule'       => [],
+                'upcomingAppointments' => [],
+            ]);
+        }
+
+        $today = now()->toDateString();
+        $startOfWeek = now()->startOfWeek()->toDateString();
+        $endOfWeek = now()->endOfWeek()->toDateString();
+
+        // Today's patients
+        $todayAppointments = Appointment::with(['patient.user', 'timeSlot'])
+            ->where('doctor_id', $doctor->id)
+            ->whereHas('timeSlot', fn($q) => $q->whereDate('date', $today))
+            ->orderBy('time_slot_id')
+            ->get();
+
+        $todayPatients = $todayAppointments->count();
+
+        // Upcoming appointments (scheduled, future dates)
+        $upcomingAppointments = Appointment::with(['patient.user', 'timeSlot'])
+            ->where('doctor_id', $doctor->id)
+            ->where('status', 'scheduled')
+            ->whereHas('timeSlot', fn($q) => $q->whereDate('date', '>=', $today))
+            ->orderBy('time_slot_id')
+            ->limit(8)
+            ->get();
+
+        $upcomingTotal = Appointment::where('doctor_id', $doctor->id)
+            ->where('status', 'scheduled')
+            ->whereHas('timeSlot', fn($q) => $q->whereDate('date', '>=', $today))
+            ->count();
+
+        // Completed this week
+        $completedWeek = Appointment::where('doctor_id', $doctor->id)
+            ->where('status', 'completed')
+            ->whereHas('timeSlot', fn($q) => $q->whereBetween('date', [$startOfWeek, $endOfWeek]))
+            ->count();
+
+        // Available slots
+        $availableSlots = TimeSlot::where('doctor_id', $doctor->id)
+            ->where('is_booked', false)
+            ->whereDate('date', '>=', $today)
+            ->count();
+
+        return Inertia::render('DoctorDashboard', [
+            'userName' => $user->name,
+            'stats' => [
+                'todayPatients'  => $todayPatients,
+                'upcomingTotal'  => $upcomingTotal,
+                'completedWeek'  => $completedWeek,
+                'availableSlots' => $availableSlots,
+            ],
+            'todaySchedule' => $todayAppointments->map(fn($a) => [
+                'id'      => $a->id,
+                'patient' => $a->patient?->user?->name,
+                'time'    => $a->timeSlot?->start_time . ' - ' . $a->timeSlot?->end_time,
+                'status'  => $a->status,
+                'notes'   => $a->notes,
+            ]),
+            'upcomingAppointments' => $upcomingAppointments->map(fn($a) => [
+                'id'      => $a->id,
+                'patient' => $a->patient?->user?->name,
+                'date'    => $a->timeSlot?->date,
+                'time'    => $a->timeSlot?->start_time . ' - ' . $a->timeSlot?->end_time,
+                'status'  => $a->status,
+                'notes'   => $a->notes,
+            ]),
+        ]);
+    }
+
+    /**
+     * Patient Dashboard — overview jadwal kesehatan pasien.
+     */
+    private function patientDashboard($user)
+    {
         $patient = $user?->patient;
 
         $upcoming = null;
@@ -221,6 +425,7 @@ class PageController extends Controller
                 'appointments' => Appointment::count(),
             ],
             'upcoming' => $upcoming,
+            'userName' => $user->name,
         ]);
     }
 }

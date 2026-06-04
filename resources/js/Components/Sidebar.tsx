@@ -8,9 +8,10 @@ interface NavLink {
 
 interface SidebarProps {
     authLinks: NavLink[];
+    roleLabel?: string;
 }
 
-export default function Sidebar({ authLinks }: SidebarProps) {
+export default function Sidebar({ authLinks, roleLabel }: SidebarProps) {
     const { url } = usePage<SharedProps>();
 
     return (
@@ -19,7 +20,7 @@ export default function Sidebar({ authLinks }: SidebarProps) {
                 <img src="/logo.png" alt="Logo" className="brand-logo" style={{ width: '32px', height: '32px', objectFit: 'contain' }} />
                 <div>
                     <p className="brand-title">MedSync Pro</p>
-                    <p className="brand-subtitle">Patient Portal</p>
+                    <p className="brand-subtitle">{roleLabel || 'Patient Portal'}</p>
                 </div>
             </div>
             <nav className="app-nav">

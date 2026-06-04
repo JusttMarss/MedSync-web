@@ -319,25 +319,22 @@ export default function Appointments({ appointments, doctors, timeSlots }: Appoi
                                 <span style={{ fontSize: '0.9rem', color: 'var(--color-text)' }}>Available Time Slots</span>
 
                                 {filteredTimeSlots.length > 0 ? (
-                                    <div className="visual-slots-container">
-                                        {Object.keys(groupedSlots).map((date) => (
-                                            <div key={date} className="slot-date-group">
-                                                <div className="slot-date-title">
-                                                    <Calendar size={13} /> {formatFriendlyDate(date)}
-                                                </div>
-                                                <div className="slots-grid">
-                                                    {groupedSlots[date].map((slot) => (
-                                                        <div
-                                                            key={slot.id}
-                                                            onClick={() => setTimeSlotId(slot.id.toString())}
-                                                            className={`slot-capsule ${timeSlotId === slot.id.toString() ? 'active' : ''}`}
-                                                        >
-                                                            {slot.start_time} - {slot.end_time}
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        ))}
+                                    <div style={{ position: 'relative' }}>
+                                        <Clock size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)' }} />
+                                        <select
+                                            className="filter-input"
+                                            style={{ paddingLeft: '2.75rem', pr: '2.5rem', borderRadius: 'var(--radius-md)', appearance: 'none', cursor: 'pointer', height: '2.9rem' }}
+                                            value={timeSlotId}
+                                            onChange={(e) => setTimeSlotId(e.target.value)}
+                                        >
+                                            <option value="" disabled>Select a time slot...</option>
+                                            {filteredTimeSlots.map((slot) => (
+                                                <option key={slot.id} value={slot.id.toString()}>
+                                                    {formatFriendlyDate(slot.date)} • {slot.start_time.substring(0, 5)} - {slot.end_time.substring(0, 5)}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <ChevronDown size={18} style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)', pointerEvents: 'none' }} />
                                     </div>
                                 ) : (
                                     <div className="empty-slots-msg">
