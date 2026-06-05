@@ -28,7 +28,7 @@ export default function StatsSection({ stats }: StatsSectionProps) {
 
     return (
         <section className="section stats-section" style={{ padding: '2rem 0 4rem' }}>
-            <div className="stats-grid">
+            <div className="stats-grid grid-flow-col" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem', position: 'relative' }}>
                 {statItems.map((item, index) => (
                     <motion.div 
                         key={index}
@@ -37,7 +37,7 @@ export default function StatsSection({ stats }: StatsSectionProps) {
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: "-50px" }}
-                        className="stat-card glass-panel"
+                        className="stat-card glass-panel flow"
                         whileHover={{ y: -5, boxShadow: '0 20px 40px -10px rgba(15, 118, 159, 0.15)' }}
                         style={{ border: 'none', background: 'var(--color-surface)' }}
                     >
