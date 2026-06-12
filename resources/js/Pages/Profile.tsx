@@ -1,6 +1,12 @@
 import MainLayout from '../Layouts/MainLayout';
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import {
+    User, Mail, Phone, MapPin, Calendar, Shield,
+    Edit3, Save, X, CheckCircle, AlertCircle,
+    Lock, BadgeCheck
+} from 'lucide-react';
+import type { SharedProps } from '../types';
 
 interface ProfileProps {
     user: any;
@@ -8,6 +14,7 @@ interface ProfileProps {
 }
 
 export default function Profile({ user, patient }: ProfileProps) {
+    const { props } = usePage<SharedProps>();
     const [isEditing, setIsEditing] = useState(false);
 
     const form = useForm({
@@ -21,17 +28,16 @@ export default function Profile({ user, patient }: ProfileProps) {
 
     const getInitial = (name?: string) => {
         if (!name) return '?';
-        return name.charAt(0).toUpperCase();
+        return name
+            .split(' ')
+            .map((n: string) => n[0])
+            .slice(0, 2)
+            .join('')
+            .toUpperCase();
     };
 
-    const formatValue = (value: any, fallback = '-') => {
-        if (!value) return fallback;
-        return value;
-    };
-
-    function handleSave(e: any) {
+    function handleSave(e: React.FormEvent) {
         e.preventDefault();
-
         form.put('/profile/update', {
             onSuccess: () => setIsEditing(false),
         });
@@ -39,7 +45,6 @@ export default function Profile({ user, patient }: ProfileProps) {
 
     function handleCancel() {
         setIsEditing(false);
-
         form.setData({
             name: user?.name || '',
             email: user?.email || '',
@@ -48,185 +53,322 @@ export default function Profile({ user, patient }: ProfileProps) {
             phone: patient?.phone || '',
             address: patient?.address || '',
         });
+        form.clearErrors();
     }
+
+    const roleLabel = user?.role === 'doctor' ? 'Dokter' : user?.role === 'admin' ? 'Admin' : 'Pasien';
 
     return (
         <MainLayout>
             <Head title="Profile" />
 
-            <section className="section page-section">
+            <section className="section page-enter" style={{ padding: '1.5rem 0 3rem' }}>
 
-                {/* HEADER */}
-                <div className="section-header text-center">
-                    <div>
-                        <h2>Profile Settings</h2>
-                        <p>Manage your personal information and account security.</p>
+                {/* ── Page Header ── */}
+                <div style={{ marginBottom: '2rem' }}>
+                    <div className="eyebrow" style={{ display: 'inline-flex' }}>
+                        <User size={14} />
+                        Manajemen Profil
                     </div>
+                    <h2 style={{
+                        fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+                        fontWeight: 800,
+                        color: 'var(--color-text)',
+                        marginTop: '0.5rem',
+                    }}>
+                        Pengaturan Akun
+                    </h2>
+                    <p style={{ color: 'var(--color-text-muted)', marginTop: '0.25rem', fontSize: '0.95rem' }}>
+                        Kelola informasi pribadi dan keamanan akun Anda.
+                    </p>
                 </div>
 
-                {/* BUTTON */}
-                <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '12px' }}>
-                    {!isEditing ? (
-                        <button
-                            className="btn btn-primary"
-                            onClick={() => setIsEditing(true)}
-                        >
-                            Edit Profile
-                        </button>
-                    ) : (
-                        <div style={{ display: 'flex', gap: '8px' }}>
-                            <button
-                                className="btn btn-success"
-                                onClick={handleSave}
-                                disabled={form.processing}
-                            >
-                                Save
-                            </button>
+                {/* Flash Messages */}
+                {props.flash?.success && (
+                    <div className="alert alert-success" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', width: 'auto', maxWidth: '500px' }}>
+                        <CheckCircle size={16} />
+                        {props.flash.success}
+                    </div>
+                )}
+                {props.flash?.error && (
+                    <div className="alert alert-danger" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', width: 'auto', maxWidth: '500px' }}>
+                        <AlertCircle size={16} />
+                        {props.flash.error}
+                    </div>
+                )}
 
-                            <button
-                                className="btn btn-secondary"
-                                onClick={handleCancel}
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    )}
-                </div>
+                <div className="profile-layout">
 
-                <div className="profile-grid">
+                    {/* ── Left: Avatar + Quick Info ── */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
 
-                    {/* PROFILE CARD */}
-                    <div className="feature-card profile-card">
-
-                        {/* HEADER AVATAR */}
-                        <div
-                            className="profile-card-header"
-                            style={{
-                                display: 'flex',
-                                alignItems: 'flex-start',
-                                gap: '12px'
-                            }}
-                        >
-                            <div
-                                className="profile-avatar"
-                                style={{
-                                    width: '48px',
-                                    height: '48px',
-                                    borderRadius: '50%',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    fontWeight: 'bold',
-                                    fontSize: '18px'
-                                }}
-                            >
+                        {/* Avatar Card */}
+                        <div className="profile-avatar-card">
+                            <div className="profile-avatar-large">
                                 {getInitial(form.data.name)}
                             </div>
-
-                            <div style={{ lineHeight: '1.2', textAlign: 'left' }}>
-                                <h3 style={{ margin: 0 }}>
-                                    {isEditing ? form.data.name : user?.name ?? 'Unknown User'}
+                            <div style={{ textAlign: 'center' }}>
+                                <h3 style={{ fontWeight: 800, fontSize: '1.25rem', color: 'var(--color-text)' }}>
+                                    {user?.name ?? 'Unknown'}
                                 </h3>
-                                <small style={{ color: '#999' }}>Patient</small>
+                                <span className="profile-role-badge">
+                                    <BadgeCheck size={12} />
+                                    {roleLabel}
+                                </span>
                             </div>
+                            <div style={{ width: '100%', borderTop: '1px solid var(--color-border)', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                <div className="profile-meta-row">
+                                    <Mail size={14} style={{ color: 'var(--color-primary)', flexShrink: 0 }} />
+                                    <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                        {user?.email || '—'}
+                                    </span>
+                                </div>
+                                <div className="profile-meta-row">
+                                    <Phone size={14} style={{ color: 'var(--color-primary)', flexShrink: 0 }} />
+                                    <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)' }}>
+                                        {patient?.phone || 'Belum diisi'}
+                                    </span>
+                                </div>
+                                <div className="profile-meta-row">
+                                    <MapPin size={14} style={{ color: 'var(--color-primary)', flexShrink: 0 }} />
+                                    <span style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                        {patient?.address || 'Belum diisi'}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {!isEditing ? (
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => setIsEditing(true)}
+                                    style={{ width: '100%', borderRadius: 'var(--radius-md)', gap: '0.5rem' }}
+                                >
+                                    <Edit3 size={15} />
+                                    Edit Profil
+                                </button>
+                            ) : (
+                                <button
+                                    className="btn btn-outline"
+                                    onClick={handleCancel}
+                                    style={{ width: '100%', borderRadius: 'var(--radius-md)', gap: '0.5rem', borderColor: '#ef4444', color: '#ef4444' }}
+                                >
+                                    <X size={15} />
+                                    Batal
+                                </button>
+                            )}
                         </div>
 
-                        {/* PROFILE INFO (VIEW + EDIT TOGGLE) */}
-                        <form onSubmit={handleSave} className="profile-info">
+                        {/* Account Security Card */}
+                        <div className="dashboard-card">
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.25rem', paddingBottom: '0.85rem', borderBottom: '1px solid var(--color-border)' }}>
+                                <div style={{ width: '32px', height: '32px', borderRadius: '10px', background: 'rgba(139, 92, 246, 0.12)', display: 'grid', placeItems: 'center' }}>
+                                    <Shield size={16} style={{ color: '#7c3aed' }} />
+                                </div>
+                                <h4 style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--color-text)' }}>Keamanan Akun</h4>
+                            </div>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                                <div className="security-info-row">
+                                    <span style={{ fontSize: '0.82rem', color: 'var(--color-text-muted)', fontWeight: 600 }}>Email</span>
+                                    <span style={{ fontSize: '0.85rem', color: 'var(--color-text)', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '160px' }}>
+                                        {user?.email}
+                                    </span>
+                                </div>
+                                <div className="security-info-row">
+                                    <span style={{ fontSize: '0.82rem', color: 'var(--color-text-muted)', fontWeight: 600 }}>Password</span>
+                                    <span style={{ fontWeight: 700, letterSpacing: '0.15em', fontSize: '0.8rem', color: 'var(--color-text)' }}>••••••••</span>
+                                </div>
+                                <button className="btn btn-outline btn-sm" style={{ borderRadius: 'var(--radius-md)', gap: '0.4rem', justifyContent: 'center', marginTop: '0.25rem' }}>
+                                    <Lock size={13} />
+                                    Ganti Password
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-                            {/* EMAIL */}
+                    {/* ── Right: Edit / View Form ── */}
+                    <div className="dashboard-card">
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid var(--color-border)' }}>
                             <div>
-                                <span>Email</span>
-                                {!isEditing ? (
-                                    <strong>{formatValue(user?.email)}</strong>
-                                ) : (
-                                    <input
-                                        style={{ textAlign: 'right', width: '100%' }}
-                                        value={form.data.email}
-                                        onChange={(e) => form.setData('email', e.target.value)}
-                                    />
-                                )}
+                                <h3 style={{ fontWeight: 800, fontSize: '1.1rem', color: 'var(--color-text)' }}>
+                                    {isEditing ? 'Edit Informasi Pribadi' : 'Informasi Pribadi'}
+                                </h3>
+                                <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: '0.2rem' }}>
+                                    {isEditing ? 'Perbarui detail profil Anda di bawah ini.' : 'Detail informasi akun dan profil pasien Anda.'}
+                                </p>
+                            </div>
+                            {isEditing && (
+                                <span className="eyebrow" style={{ margin: 0, padding: '0.35rem 0.75rem', fontSize: '0.75rem', background: 'rgba(251, 191, 36, 0.12)', color: '#b45309' }}>
+                                    Mode Edit
+                                </span>
+                            )}
+                        </div>
+
+                        <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+
+                            {/* Name + Email in 2 cols */}
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
+                                {/* Name */}
+                                <div className="profile-field-group">
+                                    <label className="profile-field-label">
+                                        <User size={13} />
+                                        Nama Lengkap
+                                    </label>
+                                    {isEditing ? (
+                                        <input
+                                            type="text"
+                                            className="filter-input"
+                                            value={form.data.name}
+                                            onChange={(e) => form.setData('name', e.target.value)}
+                                            placeholder="Masukkan nama lengkap"
+                                            style={{ width: '100%', borderRadius: 'var(--radius-md)' }}
+                                            required
+                                        />
+                                    ) : (
+                                        <div className="profile-field-value">{user?.name || '—'}</div>
+                                    )}
+                                    {form.errors.name && <span className="profile-field-error">{form.errors.name}</span>}
+                                </div>
+
+                                {/* Email */}
+                                <div className="profile-field-group">
+                                    <label className="profile-field-label">
+                                        <Mail size={13} />
+                                        Alamat Email
+                                    </label>
+                                    {isEditing ? (
+                                        <input
+                                            type="email"
+                                            className="filter-input"
+                                            value={form.data.email}
+                                            onChange={(e) => form.setData('email', e.target.value)}
+                                            placeholder="email@contoh.com"
+                                            style={{ width: '100%', borderRadius: 'var(--radius-md)' }}
+                                            required
+                                        />
+                                    ) : (
+                                        <div className="profile-field-value">{user?.email || '—'}</div>
+                                    )}
+                                    {form.errors.email && <span className="profile-field-error">{form.errors.email}</span>}
+                                </div>
                             </div>
 
-                            {/* DOB */}
-                            <div>
-                                <span>Date of Birth</span>
-                                {!isEditing ? (
-                                    <strong>{formatValue(patient?.date_of_birth)}</strong>
-                                ) : (
-                                    <input
-                                        type="date"
-                                        value={form.data.date_of_birth}
-                                        onChange={(e) => form.setData('date_of_birth', e.target.value)}
-                                    />
-                                )}
+                            {/* DOB + Gender in 2 cols */}
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
+                                {/* Date of Birth */}
+                                <div className="profile-field-group">
+                                    <label className="profile-field-label">
+                                        <Calendar size={13} />
+                                        Tanggal Lahir
+                                    </label>
+                                    {isEditing ? (
+                                        <input
+                                            type="date"
+                                            className="filter-input"
+                                            value={form.data.date_of_birth}
+                                            onChange={(e) => form.setData('date_of_birth', e.target.value)}
+                                            style={{ width: '100%', borderRadius: 'var(--radius-md)' }}
+                                        />
+                                    ) : (
+                                        <div className="profile-field-value">{patient?.date_of_birth || '—'}</div>
+                                    )}
+                                    {form.errors.date_of_birth && <span className="profile-field-error">{form.errors.date_of_birth}</span>}
+                                </div>
+
+                                {/* Gender */}
+                                <div className="profile-field-group">
+                                    <label className="profile-field-label">
+                                        <User size={13} />
+                                        Jenis Kelamin
+                                    </label>
+                                    {isEditing ? (
+                                        <select
+                                            className="filter-input filter-select"
+                                            value={form.data.gender}
+                                            onChange={(e) => form.setData('gender', e.target.value)}
+                                            style={{ width: '100%', borderRadius: 'var(--radius-md)' }}
+                                        >
+                                            <option value="">Pilih Jenis Kelamin</option>
+                                            <option value="Laki-laki">Laki-laki</option>
+                                            <option value="Perempuan">Perempuan</option>
+                                        </select>
+                                    ) : (
+                                        <div className="profile-field-value">
+                                            {patient?.gender || '—'}
+                                        </div>
+                                    )}
+                                    {form.errors.gender && <span className="profile-field-error">{form.errors.gender}</span>}
+                                </div>
                             </div>
 
-                            {/* GENDER */}
-                            <div>
-                                <span>Gender</span>
-                                {!isEditing ? (
-                                    <strong>{formatValue(patient?.gender)}</strong>
-                                ) : (
-                                    <select
-                                        value={form.data.gender}
-                                        onChange={(e) => form.setData('gender', e.target.value)}
-                                    >
-                                        <option value="">Select</option>
-                                        <option value="Laki-laki">Laki-laki</option>
-                                        <option value="Perempuan">Perempuan</option>
-                                    </select>
-                                )}
-                            </div>
-
-                            {/* PHONE */}
-                            <div>
-                                <span>Phone</span>
-                                {!isEditing ? (
-                                    <strong>{formatValue(patient?.phone)}</strong>
-                                ) : (
+                            {/* Phone */}
+                            <div className="profile-field-group">
+                                <label className="profile-field-label">
+                                    <Phone size={13} />
+                                    Nomor Telepon
+                                </label>
+                                {isEditing ? (
                                     <input
-                                        style={{ textAlign: 'right', width: '100%' }}
+                                        type="tel"
+                                        className="filter-input"
                                         value={form.data.phone}
                                         onChange={(e) => form.setData('phone', e.target.value)}
+                                        placeholder="08xxxxxxxxxx"
+                                        style={{ width: '100%', borderRadius: 'var(--radius-md)' }}
                                     />
+                                ) : (
+                                    <div className="profile-field-value">{patient?.phone || '—'}</div>
                                 )}
+                                {form.errors.phone && <span className="profile-field-error">{form.errors.phone}</span>}
                             </div>
 
-                            {/* ADDRESS */}
-                            <div>
-                                <span>Address</span>
-                                {!isEditing ? (
-                                    <strong>{formatValue(patient?.address)}</strong>
-                                ) : (
+                            {/* Address */}
+                            <div className="profile-field-group">
+                                <label className="profile-field-label">
+                                    <MapPin size={13} />
+                                    Alamat
+                                </label>
+                                {isEditing ? (
                                     <textarea
-                                        style={{ textAlign: 'right', width: '100%' }}
+                                        className="filter-input"
                                         value={form.data.address}
                                         onChange={(e) => form.setData('address', e.target.value)}
+                                        placeholder="Masukkan alamat lengkap..."
+                                        rows={3}
+                                        style={{ width: '100%', borderRadius: 'var(--radius-md)', resize: 'vertical' }}
                                     />
+                                ) : (
+                                    <div className="profile-field-value" style={{ whiteSpace: 'pre-wrap', lineHeight: 1.65 }}>
+                                        {patient?.address || '—'}
+                                    </div>
                                 )}
+                                {form.errors.address && <span className="profile-field-error">{form.errors.address}</span>}
                             </div>
 
+                            {/* Save Button */}
+                            {isEditing && (
+                                <div style={{ display: 'flex', gap: '0.75rem', paddingTop: '0.5rem', borderTop: '1px solid var(--color-border)', marginTop: '0.25rem' }}>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary"
+                                        disabled={form.processing}
+                                        style={{ flex: 1, borderRadius: 'var(--radius-md)', gap: '0.5rem' }}
+                                    >
+                                        <Save size={15} />
+                                        {form.processing ? 'Menyimpan...' : 'Simpan Perubahan'}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline"
+                                        onClick={handleCancel}
+                                        style={{ borderRadius: 'var(--radius-md)', gap: '0.5rem' }}
+                                    >
+                                        <X size={15} />
+                                        Batal
+                                    </button>
+                                </div>
+                            )}
                         </form>
                     </div>
-
-                    {/* SECURITY CARD */}
-                    <div className="feature-card profile-card-secondary">
-                        <h3>Account Security</h3>
-
-                        <div className="security-row">
-                            <span>Email Address</span>
-                            <strong>{user?.email}</strong>
-                        </div>
-
-                        <div className="security-row">
-                            <span>Password</span>
-                            <button className="btn btn-outline btn-sm">
-                                Change Password
-                            </button>
-                        </div>
-                    </div>
-
                 </div>
             </section>
         </MainLayout>

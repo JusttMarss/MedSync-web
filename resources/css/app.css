@@ -1836,3 +1836,251 @@ img {
     0%, 100% { opacity: 0.55; }
     50%       { opacity: 0.9; }
 }
+
+/* ─── Sidebar: icons + active dot ────────────────────────────── */
+.nav-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.app-nav-item {
+    gap: 0.75rem;
+    position: relative;
+}
+
+.app-nav-item.active .nav-icon,
+.app-nav-item:hover .nav-icon {
+    opacity: 1;
+}
+
+.nav-active-dot {
+    position: absolute;
+    right: 0.75rem;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-primary);
+}
+
+.app-nav-item.active {
+    background: rgba(15, 118, 159, 0.08);
+    color: var(--color-primary);
+    font-weight: 700;
+    border-left: 3px solid var(--color-primary);
+    padding-left: calc(1rem - 3px);
+}
+
+/* ─── Topbar: improved ────────────────────────────────────────── */
+.app-topbar {
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    padding: 1.25rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+}
+
+/* ─── Patient Hero Banner ─────────────────────────────────────── */
+.patient-hero-banner {
+    position: relative;
+    overflow: hidden;
+    padding: 2.5rem 2.5rem;
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, #0f769f 0%, #0ea5e9 60%, #38bdf8 100%);
+    box-shadow: 0 8px 32px rgba(15, 118, 159, 0.28);
+}
+
+.hero-blob {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.18;
+    filter: blur(32px);
+    pointer-events: none;
+}
+
+.hero-blob-1 {
+    width: 300px;
+    height: 300px;
+    top: -100px;
+    right: -80px;
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.hero-blob-2 {
+    width: 200px;
+    height: 200px;
+    bottom: -60px;
+    left: -40px;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* ─── Upcoming Appointment Card ───────────────────────────────── */
+.upcoming-appointment-card {
+    position: relative;
+    overflow: hidden;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(15,118,159,0.04) 0%, transparent 100%);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(15, 118, 159, 0.12);
+    max-width: 640px;
+}
+
+.upcoming-accent-strip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gradient-button);
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+/* ─── Profile Page Layout ─────────────────────────────────────── */
+.profile-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+@media (max-width: 900px) {
+    .profile-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ─── Profile Avatar Card ─────────────────────────────────────── */
+.profile-avatar-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+}
+
+.profile-avatar-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--gradient-button);
+    color: #fff;
+    font-size: 1.75rem;
+    font-weight: 800;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 8px 24px rgba(15, 118, 159, 0.3);
+    flex-shrink: 0;
+}
+
+.profile-role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--radius-full);
+    background: rgba(15, 118, 159, 0.1);
+    color: var(--color-primary);
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-top: 0.25rem;
+}
+
+.profile-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: left;
+    width: 100%;
+}
+
+/* ─── Security Row (compact) ──────────────────────────────────── */
+.security-info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.security-info-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+/* ─── Profile Field Groups ────────────────────────────────────── */
+.profile-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.profile-field-label {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+}
+
+.profile-field-value {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    padding: 0.6rem 0.85rem;
+    background: var(--color-surface-alt);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    min-height: 2.75rem;
+    display: flex;
+    align-items: center;
+}
+
+.profile-field-error {
+    font-size: 0.78rem;
+    color: #b91c1c;
+    font-weight: 600;
+}
+
+/* ─── Filter inputs in profile ────────────────────────────────── */
+.profile-layout .filter-input,
+.profile-layout .filter-select {
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    padding: 0.7rem 0.85rem;
+    min-width: unset;
+    width: 100%;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-layout .filter-input:focus,
+.profile-layout .filter-select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(15, 118, 159, 0.1);
+}
+
+/* ─── Responsive profile grid: 2-col form → 1-col on small ─── */
+@media (max-width: 640px) {
+    .profile-layout .profile-field-2col {
+        grid-template-columns: 1fr;
+    }
+}
+

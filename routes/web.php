@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
     Route::put('/appointments/{id}/status', [AppointmentController::class, 'updateStatus'])->name('appointments.status.update');
     Route::get('/schedule', [PageController::class, 'schedule'])->name('schedule');
     Route::get('/profile', [PageController::class, 'profile'])->name('profile');
+    Route::put('/profile/update', [PageController::class, 'updateProfile'])->name('profile.update');
     Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
 
     // Admin Operations

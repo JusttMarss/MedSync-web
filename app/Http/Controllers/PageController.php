@@ -190,6 +190,42 @@ class PageController extends Controller
     }
 
     /**
+     * Update profile — simpan data user + patient.
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        $data = $request->validate([
+            'name'          => 'required|string|max:255',
+            'email'         => 'required|email|unique:users,email,' . $user->id,
+            'date_of_birth' => 'nullable|date',
+            'gender'        => 'nullable|in:Laki-laki,Perempuan',
+            'phone'         => 'nullable|string|max:25',
+            'address'       => 'nullable|string|max:500',
+        ]);
+
+        // Update user
+        $user->name  = $data['name'];
+        $user->email = $data['email'];
+        $user->save();
+
+        // Upsert patient profile
+        Patient::updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'date_of_birth' => $data['date_of_birth'] ?? null,
+                'gender'        => $data['gender'] ?? null,
+                'phone'         => $data['phone'] ?? null,
+                'address'       => $data['address'] ?? null,
+            ]
+        );
+
+        return Redirect::back()->with('success', 'Profil berhasil diperbarui!');
+    }
+
+
+    /**
      * Dashboard page — route berdasarkan role user.
      */
     public function dashboard(Request $request)
