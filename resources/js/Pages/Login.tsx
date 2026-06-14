@@ -19,16 +19,16 @@ export default function Login() {
             <Head title="Login" />
 
             <section style={{
-                flex: 1,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '5rem 1.5rem',
+                padding: '6rem 2rem 1.5rem',
+                flex: 1,
             }}>
                 <div style={{
                     display: 'flex',
                     width: '100%',
-                    maxWidth: '860px',
+                    maxWidth: '1000px',
                     borderRadius: '20px',
                     overflow: 'hidden',
                     boxShadow: '0 8px 40px rgba(15,118,159,0.12)',
@@ -68,7 +68,7 @@ export default function Login() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', position: 'relative' }}>
                             <div style={{ display: 'flex' }}>
                                 {[
-                                    { label: 'A.', anim: 'floatA', delay: '0s' },
+                                    { label: 'A', anim: 'floatA', delay: '0s' },
                                     { label: 'B', anim: 'floatB', delay: '0.4s' },
                                     { label: 'C', anim: 'floatC', delay: '0.8s' },
                                 ].map(({ label, anim, delay }, i) => (
@@ -101,9 +101,9 @@ export default function Login() {
 
                     {/* ── Right panel ── */}
                     <div style={{
-                        flex: 1.1,
+                        flex: 1.2,
                         background: 'var(--color-surface)',
-                        padding: '3rem 2.75rem',
+                        padding: '2.5rem 2.75rem',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'center',
