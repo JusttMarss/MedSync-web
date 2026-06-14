@@ -6,6 +6,7 @@ use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\Appointment;
 use App\Models\User;
+use App\Models\MedicalRecord:
 use App\Enums\RoleEnum;
 use App\Enums\GenderEnum;
 use Illuminate\Http\Request;
@@ -205,4 +206,72 @@ class AdminController extends Controller
 
         return Redirect::back()->with('success', 'Status appointment berhasil diperbarui.');
     }
+
+        /**
+     * Simpan rekam medis baru (input manual oleh admin/dokter).
+     */
+    public function storeMedicalRecord(Request $request)
+    {
+        $request->validate([
+            'appointment_id' => 'required|exists:appointments,id',
+            'diagnosis'      => 'required|string|max:500',
+            'treatment'      => 'nullable|string',
+            'medications'    => 'nullable|array',
+            'notes'          => 'nullable|string',
+        ]);
+ 
+        $appointment = \App\Models\Appointment::findOrFail($request->appointment_id);
+ 
+        // Cek duplikat
+        if (\App\Models\MedicalRecord::where('appointment_id', $appointment->id)->exists()) {
+            return back()->with('error', 'Rekam medis untuk appointment ini sudah ada.');
+        }
+ 
+        \App\Models\MedicalRecord::create([
+            'appointment_id' => $appointment->id,
+            'patient_id'     => $appointment->patient_id,
+            'doctor_id'      => $appointment->doctor_id,
+            'diagnosis'      => $request->diagnosis,
+            'treatment'      => $request->treatment,
+            'medications'    => $request->medications ?? [],
+            'notes'          => $request->notes,
+        ]);
+ 
+        return back()->with('success', 'Rekam medis berhasil ditambahkan.');
+    }
+ 
+    /**
+     * Update rekam medis.
+     */
+    public function updateMedicalRecord(Request $request, $id)
+    {
+        $record = \App\Models\MedicalRecord::findOrFail($id);
+ 
+        $request->validate([
+            'diagnosis'   => 'required|string|max:500',
+            'treatment'   => 'nullable|string',
+            'medications' => 'nullable|array',
+            'notes'       => 'nullable|string',
+        ]);
+ 
+        $record->update([
+            'diagnosis'   => $request->diagnosis,
+            'treatment'   => $request->treatment,
+            'medications' => $request->medications ?? [],
+            'notes'       => $request->notes,
+        ]);
+ 
+        return back()->with('success', 'Rekam medis berhasil diperbarui.');
+    }
+ 
+    /**
+     * Hapus rekam medis.
+     */
+    public function deleteMedicalRecord($id)
+    {
+        \App\Models\MedicalRecord::findOrFail($id)->delete();
+ 
+        return back()->with('success', 'Rekam medis berhasil dihapus.');
+    }
+    
 }
