@@ -95,7 +95,12 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     </div>
                 </div>
             ) : (
-                <div className="guest-shell" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+                <div className="guest-shell" style={{ 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    minHeight: '100vh',
+                    overflowY: 'auto',
+                     }}>
                     <Navbar navLinks={navLinks} authLinks={authLinks} />
                     
                     <AnimatePresence mode="wait">
