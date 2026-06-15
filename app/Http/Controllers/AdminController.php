@@ -6,6 +6,7 @@ use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\Appointment;
 use App\Models\User;
+use App\Models\MedicalRecord:
 use App\Enums\RoleEnum;
 use App\Enums\GenderEnum;
 use Illuminate\Http\Request;

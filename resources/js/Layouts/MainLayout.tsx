@@ -17,7 +17,7 @@ interface MainLayoutProps {
 const pageVariants = {
     initial: { opacity: 0, y: 15 },
     animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
-    exit: { opacity: 0, y: -15, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }
+    exit: { opacity: 0, y: -15, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } },
 };
 
 function getAuthLinks(role: string | null | undefined) {
@@ -47,9 +47,9 @@ function getAuthLinks(role: string | null | undefined) {
 
 function getRoleLabel(role: string | null | undefined): string {
     switch (role) {
-        case 'admin': return 'Admin Panel';
+        case 'admin':  return 'Admin Panel';
         case 'doctor': return 'Doctor Portal';
-        default: return 'Patient Portal';
+        default:       return 'Patient Portal';
     }
 }
 
@@ -57,19 +57,17 @@ export default function MainLayout({ children }: MainLayoutProps) {
     const { props, url } = usePage<SharedProps>();
 
     const navLinks = [
-        { href: '/', label: 'Home' },
+        { href: '/',        label: 'Home' },
         { href: '/doctors', label: 'Doctors' },
     ];
 
-    const userRole = props.auth?.user?.role;
-
+    const userRole  = props.auth?.user?.role;
     const authLinks = props.auth?.user
         ? getAuthLinks(userRole)
         : [
-            { href: '/login', label: 'Login' },
+            { href: '/login',    label: 'Login' },
             { href: '/register', label: 'Sign Up' },
-        ];
-
+          ];
     const roleLabel = getRoleLabel(userRole);
 
     return (
@@ -83,7 +81,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                         <Topbar />
 
                         <AnimatePresence mode="wait">
-                            <motion.main 
+                            <motion.main
                                 key={url}
                                 variants={pageVariants}
                                 initial="initial"
@@ -98,16 +96,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
                     </div>
                 </div>
             ) : (
-                <div className="guest-shell" style={{ 
-                    display: 'flex', 
-                    flexDirection: 'column', 
-                    minHeight: '100vh',
-                    overflowY: 'auto',
-                     }}>
+                <div className="guest-shell" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', overflowY: 'auto' }}>
                     <Navbar navLinks={navLinks} authLinks={authLinks} />
-                    
+
                     <AnimatePresence mode="wait">
-                        <motion.main 
+                        <motion.main
                             key={url}
                             variants={pageVariants}
                             initial="initial"
@@ -118,7 +111,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
                             {children}
                         </motion.main>
                     </AnimatePresence>
-                    
+
                     <Footer />
                 </div>
             )}

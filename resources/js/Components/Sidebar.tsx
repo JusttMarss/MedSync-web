@@ -1,5 +1,12 @@
 import { Link, router, usePage } from '@inertiajs/react';
+<<<<<<< HEAD
 import { HeartPulse, LayoutDashboard, CalendarDays, Clock3, User, LogOut, Stethoscope, ShieldCheck, FileText } from 'lucide-react';
+=======
+import {
+    HeartPulse, LayoutDashboard, CalendarDays, Clock3,
+    User, LogOut, Stethoscope, ShieldCheck, ClipboardList,
+} from 'lucide-react';
+>>>>>>> 13069ecbe5b3823c20858bd726fcb7b1d152dcce
 import type { SharedProps } from '../types';
 
 interface NavLink {
@@ -14,14 +21,15 @@ interface SidebarProps {
 
 function getIcon(label: string) {
     switch (label.toLowerCase()) {
-        case 'dashboard': return <LayoutDashboard size={18} />;
-        case 'appointments': return <CalendarDays size={18} />;
-        case 'schedule': return <Clock3 size={18} />;
-        case 'profile': return <User size={18} />;
-        case 'doctors': return <Stethoscope size={18} />;
-        case 'admin': return <ShieldCheck size={18} />;
-        case 'medical records': return <FileText size={18} />;
-        default: return <LayoutDashboard size={18} />;
+        case 'dashboard':       return <LayoutDashboard size={18} />;
+        case 'appointments':    return <CalendarDays size={18} />;
+        case 'schedule':        return <Clock3 size={18} />;
+        case 'profile':         return <User size={18} />;
+        case 'doctors':         return <Stethoscope size={18} />;
+        case 'admin':           return <ShieldCheck size={18} />;
+        case 'rekam medis':     return <ClipboardList size={18} />;
+        case 'medical records': return <ClipboardList size={18} />;
+        default:                return <LayoutDashboard size={18} />;
     }
 }
 
@@ -58,7 +66,11 @@ export default function Sidebar({ authLinks, roleLabel }: SidebarProps) {
 
             {/* Navigation */}
             <nav className="app-nav" style={{ flex: 1 }}>
-                <p style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.09em', color: 'var(--color-text-muted)', textTransform: 'uppercase', padding: '0 0.5rem', marginBottom: '0.5rem' }}>
+                <p style={{
+                    fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.09em',
+                    color: 'var(--color-text-muted)', textTransform: 'uppercase',
+                    padding: '0 0.5rem', marginBottom: '0.5rem',
+                }}>
                     Menu
                 </p>
                 {authLinks.map((link) => {

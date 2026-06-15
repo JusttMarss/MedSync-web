@@ -4,6 +4,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\WebAuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\MedicalRecordController;
 use App\Http\Controllers\TimeSlotController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [WebAuthController::class, 'logout'])->name('logout');
 
+    Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
     Route::get('/appointments', [PageController::class, 'appointments'])->name('appointments');
     Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
     Route::put('/appointments/{id}/status', [AppointmentController::class, 'updateStatus'])->name('appointments.status.update');
@@ -41,8 +43,13 @@ Route::middleware('auth')->group(function () {
     Route::put('/admin/appointments/{id}/status', [AdminController::class, 'updateAppointmentStatus'])->name('admin.appointments.status');
     Route::delete('/admin/medical-records/{id}', [AdminController::class, 'deleteMedicalRecord'])->name('admin.medical-records.destroy');
 
+    // ── Rekam Medis Admin (input manual) ─────────────────────────
+    Route::post('/admin/medical-records', [AdminController::class, 'storeMedicalRecord'])->name('admin.medical-records.store');
+    Route::put('/admin/medical-records/{id}', [AdminController::class, 'updateMedicalRecord'])->name('admin.medical-records.update');
+    Route::delete('/admin/medical-records/{id}', [AdminController::class, 'deleteMedicalRecord'])->name('admin.medical-records.destroy');
+
     // Timeslot Operations
     Route::post('/timeslots', [TimeSlotController::class, 'store'])->name('timeslots.store');
     Route::put('/timeslots/{id}', [TimeSlotController::class, 'update'])->name('timeslots.update');
     Route::delete('/timeslots/{id}', [TimeSlotController::class, 'destroy'])->name('timeslots.destroy');
-});
+    });
