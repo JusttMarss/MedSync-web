@@ -321,22 +321,31 @@ export default function Appointments({ appointments, doctors, timeSlots }: Appoi
                                 <span style={{ fontSize: '0.9rem', color: 'var(--color-text)' }}>Available Time Slots</span>
 
                                 {filteredTimeSlots.length > 0 ? (
-                                    <div style={{ position: 'relative' }}>
-                                        <Clock size={18} style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)' }} />
-                                        <select
-                                            className="filter-input"
-                                            style={{ paddingLeft: '2.75rem', pr: '2.5rem', borderRadius: 'var(--radius-md)', appearance: 'none', cursor: 'pointer', height: '2.9rem' }}
-                                            value={timeSlotId}
-                                            onChange={(e) => setTimeSlotId(e.target.value)}
-                                        >
-                                            <option value="" disabled>Select a time slot...</option>
-                                            {filteredTimeSlots.map((slot) => (
-                                                <option key={slot.id} value={slot.id.toString()}>
-                                                    {formatFriendlyDate(slot.date)} • {slot.start_time.substring(0, 5)} - {slot.end_time.substring(0, 5)}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <ChevronDown size={18} style={{ position: 'absolute', right: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)', pointerEvents: 'none' }} />
+                                    <div className="visual-slots-container">
+                                        {Object.entries(groupedSlots).map(([dateStr, slots]) => (
+                                            <div key={dateStr} className="slot-date-group">
+                                                <div className="slot-date-title">
+                                                    <Calendar size={12} style={{ color: 'var(--color-primary)' }} />
+                                                    {formatFriendlyDate(dateStr)}
+                                                </div>
+                                                <div className="slots-grid">
+                                                    {slots.map((slot) => {
+                                                        const isActive = timeSlotId === slot.id.toString();
+                                                        return (
+                                                            <button
+                                                                key={slot.id}
+                                                                type="button"
+                                                                className={`slot-capsule ${isActive ? 'active' : ''}`}
+                                                                onClick={() => setTimeSlotId(slot.id.toString())}
+                                                                style={{ border: isActive ? '1px solid var(--color-primary)' : '1px solid var(--color-border)' }}
+                                                            >
+                                                                {slot.start_time.substring(0, 5)} - {slot.end_time.substring(0, 5)}
+                                                            </button>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
                                 ) : (
                                     <div className="empty-slots-msg">
@@ -453,6 +462,44 @@ export default function Appointments({ appointments, doctors, timeSlots }: Appoi
                                         )}
                                     </div>
                                 </div>
+
+                                {selectedAppointment.medical_record && (
+                                    <div className="modal-info-section" style={{ marginTop: '1.25rem' }}>
+                                        <span className="modal-info-label" style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--color-primary)' }}>
+                                            <FileText size={15} /> Rekam Medis (Catatan Dokter)
+                                        </span>
+                                        <div className="modal-info-card" style={{ borderLeft: '3px solid var(--color-primary)', background: 'rgba(15,118,159,0.02)', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                                            <div>
+                                                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-muted)', display: 'block', textTransform: 'uppercase', marginBottom: '0.2rem' }}>Diagnosis</span>
+                                                <span style={{ fontSize: '0.9rem', color: 'var(--color-text)', fontWeight: 600 }}>{selectedAppointment.medical_record.diagnosis || '—'}</span>
+                                            </div>
+                                            {selectedAppointment.medical_record.treatment && (
+                                                <div>
+                                                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-muted)', display: 'block', textTransform: 'uppercase', marginBottom: '0.2rem' }}>Tindakan (Treatment)</span>
+                                                    <span style={{ fontSize: '0.9rem', color: 'var(--color-text)' }}>{selectedAppointment.medical_record.treatment}</span>
+                                                </div>
+                                            )}
+                                            {selectedAppointment.medical_record.medications && selectedAppointment.medical_record.medications.length > 0 && (
+                                                <div>
+                                                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-muted)', display: 'block', textTransform: 'uppercase', marginBottom: '0.3rem' }}>Resep Obat</span>
+                                                    <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap' }}>
+                                                        {selectedAppointment.medical_record.medications.map((med: string, idx: number) => (
+                                                            <span key={idx} style={{ fontSize: '0.75rem', background: 'rgba(16,185,129,0.08)', color: '#10b981', padding: '0.15rem 0.5rem', borderRadius: 'var(--radius-sm)', fontWeight: 600 }}>
+                                                                {med}
+                                                            </span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            )}
+                                            {selectedAppointment.medical_record.notes && (
+                                                <div>
+                                                    <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--color-text-muted)', display: 'block', textTransform: 'uppercase', marginBottom: '0.2rem' }}>Catatan Tambahan Dokter</span>
+                                                    <span style={{ fontSize: '0.9rem', color: 'var(--color-text)', fontStyle: 'italic' }}>"{selectedAppointment.medical_record.notes}"</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                             <div className="details-modal-footer">
                                 <button

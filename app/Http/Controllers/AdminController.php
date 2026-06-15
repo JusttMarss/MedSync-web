@@ -196,6 +196,10 @@ class AdminController extends Controller
     {
         $request->validate([
             'status' => 'required|string|in:pending,scheduled,confirmed,completed,cancelled',
+            'diagnosis' => 'nullable|string',
+            'treatment' => 'nullable|string',
+            'medications' => 'nullable|string',
+            'notes' => 'nullable|string',
         ]);
 
         $appointment = Appointment::findOrFail($id);
@@ -203,11 +207,41 @@ class AdminController extends Controller
             'status' => $request->status,
         ]);
 
+        // If status becomes completed, create/update medical record
+        if ($request->status === 'completed') {
+            \App\Models\MedicalRecord::updateOrCreate(
+                ['appointment_id' => $appointment->id],
+                [
+                    'patient_id' => $appointment->patient_id,
+                    'doctor_id' => $appointment->doctor_id,
+                    'diagnosis' => $request->diagnosis,
+                    'treatment' => $request->treatment,
+                    'medications' => $request->medications ? array_map('trim', explode(',', $request->medications)) : null,
+                    'notes' => $request->notes,
+                ]
+            );
+        }
+
         // If status becomes cancelled, release the time slot
         if ($request->status === 'cancelled') {
             $appointment->timeSlot?->update(['is_booked' => false]);
         }
 
         return Redirect::back()->with('success', 'Status appointment berhasil diperbarui.');
+    }
+
+    /**
+     * Delete a medical record (Admin only).
+     */
+    public function deleteMedicalRecord(Request $request, $id)
+    {
+        if ($request->user()->role?->value !== 'admin' && $request->user()->role !== 'admin') {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $record = \App\Models\MedicalRecord::findOrFail($id);
+        $record->delete();
+
+        return Redirect::back()->with('success', 'Rekam medis berhasil dihapus.');
     }
 }

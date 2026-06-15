@@ -62,6 +62,10 @@ class AppointmentController extends Controller
     {
         $request->validate([
             'status' => 'required|string|in:pending,scheduled,confirmed,completed,cancelled',
+            'diagnosis' => 'nullable|string',
+            'treatment' => 'nullable|string',
+            'medications' => 'nullable|string',
+            'notes' => 'nullable|string',
         ]);
 
         $appointment = Appointment::findOrFail($id);
@@ -79,6 +83,21 @@ class AppointmentController extends Controller
         $appointment->update([
             'status' => $request->status,
         ]);
+
+        // If status becomes completed, create/update medical record
+        if ($request->status === 'completed') {
+            \App\Models\MedicalRecord::updateOrCreate(
+                ['appointment_id' => $appointment->id],
+                [
+                    'patient_id' => $appointment->patient_id,
+                    'doctor_id' => $appointment->doctor_id,
+                    'diagnosis' => $request->diagnosis,
+                    'treatment' => $request->treatment,
+                    'medications' => $request->medications ? array_map('trim', explode(',', $request->medications)) : null,
+                    'notes' => $request->notes,
+                ]
+            );
+        }
 
         // If status becomes cancelled, release the time slot
         if ($request->status === 'cancelled') {

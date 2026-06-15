@@ -27,6 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [PageController::class, 'profile'])->name('profile');
     Route::put('/profile/update', [PageController::class, 'updateProfile'])->name('profile.update');
     Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
+    Route::get('/medical-records', [PageController::class, 'medicalRecords'])->name('medical-records');
 
     // Admin Operations
     Route::post('/admin/doctors', [AdminController::class, 'storeDoctor'])->name('admin.doctors.store');
@@ -38,6 +39,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/admin/patients/{id}', [AdminController::class, 'deletePatient'])->name('admin.patients.destroy');
 
     Route::put('/admin/appointments/{id}/status', [AdminController::class, 'updateAppointmentStatus'])->name('admin.appointments.status');
+    Route::delete('/admin/medical-records/{id}', [AdminController::class, 'deleteMedicalRecord'])->name('admin.medical-records.destroy');
 
     // Timeslot Operations
     Route::post('/timeslots', [TimeSlotController::class, 'store'])->name('timeslots.store');

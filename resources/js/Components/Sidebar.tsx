@@ -1,5 +1,5 @@
 import { Link, router, usePage } from '@inertiajs/react';
-import { HeartPulse, LayoutDashboard, CalendarDays, Clock3, User, LogOut, Stethoscope, ShieldCheck } from 'lucide-react';
+import { HeartPulse, LayoutDashboard, CalendarDays, Clock3, User, LogOut, Stethoscope, ShieldCheck, FileText } from 'lucide-react';
 import type { SharedProps } from '../types';
 
 interface NavLink {
@@ -20,6 +20,7 @@ function getIcon(label: string) {
         case 'profile': return <User size={18} />;
         case 'doctors': return <Stethoscope size={18} />;
         case 'admin': return <ShieldCheck size={18} />;
+        case 'medical records': return <FileText size={18} />;
         default: return <LayoutDashboard size={18} />;
     }
 }
