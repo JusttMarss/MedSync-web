@@ -116,7 +116,7 @@ class PageController extends Controller
                 'specialization' => $a->doctor?->specialization,
                 'date'           => $a->timeSlot?->date,
                 'time'           => $a->timeSlot?->start_time . ' - ' . $a->timeSlot?->end_time,
-                'status'         => $a->status,
+                'status'         => $a->status instanceof \App\Enums\AppointmentStatusEnum ? $a->status->value : $a->status,
                 'notes'          => $a->notes,
             ]);
 
@@ -325,6 +325,20 @@ class PageController extends Controller
                 'created_at'     => $a->created_at?->format('d M Y'),
             ]);
 
+        $allTimeSlots = TimeSlot::with('doctor.user')
+            ->orderBy('date', 'desc')
+            ->orderBy('start_time', 'desc')
+            ->get()
+            ->map(fn($t) => [
+                'id'          => $t->id,
+                'doctor_id'   => $t->doctor_id,
+                'doctor_name' => $t->doctor?->user?->name,
+                'date'        => $t->date,
+                'start_time'  => $t->start_time,
+                'end_time'    => $t->end_time,
+                'is_booked'   => (bool)$t->is_booked,
+            ]);
+
         return Inertia::render('AdminDashboard', [
             'userName' => $user->name,
             'stats' => [
@@ -340,6 +354,7 @@ class PageController extends Controller
             'allDoctors'         => $allDoctors,
             'allPatients'        => $allPatients,
             'allAppointments'    => $allAppointments,
+            'allTimeSlots'       => $allTimeSlots,
         ]);
     }
 
@@ -380,14 +395,14 @@ class PageController extends Controller
         // Upcoming appointments (scheduled, future dates)
         $upcomingAppointments = Appointment::with(['patient.user', 'timeSlot'])
             ->where('doctor_id', $doctor->id)
-            ->where('status', 'scheduled')
+            ->whereIn('status', ['pending', 'confirmed', 'scheduled'])
             ->whereHas('timeSlot', fn($q) => $q->whereDate('date', '>=', $today))
             ->orderBy('time_slot_id')
             ->limit(8)
             ->get();
 
         $upcomingTotal = Appointment::where('doctor_id', $doctor->id)
-            ->where('status', 'scheduled')
+            ->whereIn('status', ['pending', 'confirmed', 'scheduled'])
             ->whereHas('timeSlot', fn($q) => $q->whereDate('date', '>=', $today))
             ->count();
 
@@ -403,6 +418,18 @@ class PageController extends Controller
             ->whereDate('date', '>=', $today)
             ->count();
 
+        $myTimeSlots = TimeSlot::where('doctor_id', $doctor->id)
+            ->orderBy('date', 'desc')
+            ->orderBy('start_time', 'desc')
+            ->get()
+            ->map(fn($t) => [
+                'id'          => $t->id,
+                'date'        => $t->date,
+                'start_time'  => $t->start_time,
+                'end_time'    => $t->end_time,
+                'is_booked'   => (bool)$t->is_booked,
+            ]);
+
         return Inertia::render('DoctorDashboard', [
             'userName' => $user->name,
             'stats' => [
@@ -415,7 +442,7 @@ class PageController extends Controller
                 'id'      => $a->id,
                 'patient' => $a->patient?->user?->name,
                 'time'    => $a->timeSlot?->start_time . ' - ' . $a->timeSlot?->end_time,
-                'status'  => $a->status,
+                'status'  => $a->status instanceof \App\Enums\AppointmentStatusEnum ? $a->status->value : $a->status,
                 'notes'   => $a->notes,
             ]),
             'upcomingAppointments' => $upcomingAppointments->map(fn($a) => [
@@ -423,9 +450,10 @@ class PageController extends Controller
                 'patient' => $a->patient?->user?->name,
                 'date'    => $a->timeSlot?->date,
                 'time'    => $a->timeSlot?->start_time . ' - ' . $a->timeSlot?->end_time,
-                'status'  => $a->status,
+                'status'  => $a->status instanceof \App\Enums\AppointmentStatusEnum ? $a->status->value : $a->status,
                 'notes'   => $a->notes,
             ]),
+            'myTimeSlots' => $myTimeSlots,
         ]);
     }
 
@@ -440,16 +468,18 @@ class PageController extends Controller
         if ($patient) {
             $upcomingAppointment = Appointment::with(['doctor.user', 'timeSlot'])
                 ->where('patient_id', $patient->id)
-                ->where('status', 'scheduled')
+                ->whereIn('status', ['pending', 'confirmed', 'scheduled'])
                 ->orderBy('time_slot_id')
                 ->first();
 
             if ($upcomingAppointment) {
                 $upcoming = [
+                    'id'             => $upcomingAppointment->id,
                     'doctor'         => $upcomingAppointment->doctor?->user?->name,
                     'specialization' => $upcomingAppointment->doctor?->specialization,
                     'date'           => $upcomingAppointment->timeSlot?->date,
                     'time'           => $upcomingAppointment->timeSlot?->start_time . ' - ' . $upcomingAppointment->timeSlot?->end_time,
+                    'status'         => $upcomingAppointment->status?->value ?? $upcomingAppointment->status,
                 ];
             }
         }

@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import MainLayout from '../Layouts/MainLayout';
 import { Head, router } from '@inertiajs/react';
+import TimeSlotManager from '../Components/Admin/TimeSlotManager';
 import {
     Users, Calendar, Clock, CheckCircle2, AlertCircle,
     Activity, CalendarCheck, Clipboard, XCircle
@@ -28,6 +30,7 @@ interface DoctorDashboardProps {
         status: string;
         notes: string | null;
     }[];
+    myTimeSlots: any[];
 }
 
 function getGreeting(): string {
@@ -58,8 +61,9 @@ function formatDate(dateStr: string) {
     }
 }
 
-export default function DoctorDashboard({ userName, stats, todaySchedule, upcomingAppointments }: DoctorDashboardProps) {
+export default function DoctorDashboard({ userName, stats, todaySchedule, upcomingAppointments, myTimeSlots }: DoctorDashboardProps) {
     const greeting = getGreeting();
+    const [activeTab, setActiveTab] = useState<'overview' | 'timeslots'>('overview');
 
     const updateStatus = (id: number, status: string) => {
         if (confirm(`Apakah Anda yakin ingin mengubah status appointment menjadi ${status === 'completed' ? 'Selesai' : 'Dibatalkan'}?`)) {
@@ -107,8 +111,36 @@ export default function DoctorDashboard({ userName, stats, todaySchedule, upcomi
                     </div>
                 </div>
 
-                {/* Stats Grid */}
-                <div className="stats-grid" style={{ marginBottom: '2rem' }}>
+                {/* Dashboard Tabs Selector */}
+                <div className="tabs-container" style={{
+                    display: 'flex',
+                    gap: '0.5rem',
+                    marginBottom: '2rem',
+                    borderBottom: '1px solid var(--color-border)',
+                    paddingBottom: '0.5rem',
+                    overflowX: 'auto',
+                    scrollbarWidth: 'none'
+                }}>
+                    <button
+                        onClick={() => setActiveTab('overview')}
+                        className={`btn ${activeTab === 'overview' ? 'btn-primary' : 'btn-outline'}`}
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', borderRadius: 'var(--radius-md)', padding: '0.6rem 1.1rem', fontSize: '0.9rem' }}
+                    >
+                        <Activity size={16} /> Overview
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('timeslots')}
+                        className={`btn ${activeTab === 'timeslots' ? 'btn-primary' : 'btn-outline'}`}
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', borderRadius: 'var(--radius-md)', padding: '0.6rem 1.1rem', fontSize: '0.9rem' }}
+                    >
+                        <Clock size={16} /> Kelola Jadwal
+                    </button>
+                </div>
+
+                {activeTab === 'overview' && (
+                    <>
+                        {/* Stats Grid */}
+                        <div className="stats-grid" style={{ marginBottom: '2rem' }}>
                     <div className="stat-card">
                         <div className="stat-icon"><Users size={22} /></div>
                         <div className="stat-number">{stats.todayPatients}</div>
@@ -303,6 +335,12 @@ export default function DoctorDashboard({ userName, stats, todaySchedule, upcomi
                         )}
                     </div>
                 </div>
+                    </>
+                )}
+
+                {activeTab === 'timeslots' && (
+                    <TimeSlotManager timeSlots={myTimeSlots} isAdmin={false} />
+                )}
             </section>
         </MainLayout>
     );

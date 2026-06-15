@@ -15,7 +15,7 @@
             <li><strong>Spesialisasi:</strong> {{ $appointment->doctor->specialization ?? 'N/A' }}</li>
             <li><strong>Tanggal:</strong> {{ $appointment->timeSlot->date ?? 'N/A' }}</li>
             <li><strong>Waktu:</strong> {{ $appointment->timeSlot->start_time ?? 'N/A' }} - {{ $appointment->timeSlot->end_time ?? 'N/A' }}</li>
-            <li><strong>Status:</strong> {{ ucfirst($appointment->status) }}</li>
+            <li><strong>Status:</strong> {{ ucfirst($appointment->status->value) }}</li>
             @if($appointment->notes)
                 <li><strong>Catatan:</strong> {{ $appointment->notes }}</li>
             @endif
