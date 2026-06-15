@@ -8,6 +8,7 @@ import {
 import DoctorManager from '../Components/Admin/DoctorManager';
 import PatientManager from '../Components/Admin/PatientManager';
 import AppointmentManager from '../Components/Admin/AppointmentManager';
+import TimeSlotManager from '../Components/Admin/TimeSlotManager';
 
 interface AdminDashboardProps {
     userName?: string;
@@ -24,6 +25,7 @@ interface AdminDashboardProps {
     allDoctors: any[];
     allPatients: any[];
     allAppointments: any[];
+    allTimeSlots: any[];
 }
 
 function getGreeting(): string {
@@ -49,10 +51,11 @@ export default function AdminDashboard({
     recentPatients,
     allDoctors,
     allPatients,
-    allAppointments
+    allAppointments,
+    allTimeSlots
 }: AdminDashboardProps) {
     const greeting = getGreeting();
-    const [activeTab, setActiveTab] = useState<'overview' | 'doctors' | 'patients' | 'appointments'>('overview');
+    const [activeTab, setActiveTab] = useState<'overview' | 'doctors' | 'patients' | 'appointments' | 'timeslots'>('overview');
 
     return (
         <MainLayout>
@@ -131,6 +134,13 @@ export default function AdminDashboard({
                         style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', borderRadius: 'var(--radius-md)', padding: '0.6rem 1.1rem', fontSize: '0.9rem' }}
                     >
                         <CalendarCheck size={16} /> Kelola Appointment
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('timeslots')}
+                        className={`btn ${activeTab === 'timeslots' ? 'btn-primary' : 'btn-outline'}`}
+                        style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', borderRadius: 'var(--radius-md)', padding: '0.6rem 1.1rem', fontSize: '0.9rem' }}
+                    >
+                        <Clock size={16} /> Jadwal Dokter
                     </button>
                 </div>
 
@@ -364,6 +374,7 @@ export default function AdminDashboard({
                 {activeTab === 'doctors' && <DoctorManager doctors={allDoctors} />}
                 {activeTab === 'patients' && <PatientManager patients={allPatients} />}
                 {activeTab === 'appointments' && <AppointmentManager appointments={allAppointments} />}
+                {activeTab === 'timeslots' && <TimeSlotManager timeSlots={allTimeSlots} isAdmin={true} doctors={allDoctors} />}
             </section>
         </MainLayout>
     );

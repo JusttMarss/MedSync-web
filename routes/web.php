@@ -4,6 +4,7 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\WebAuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\TimeSlotController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
@@ -37,4 +38,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/admin/patients/{id}', [AdminController::class, 'deletePatient'])->name('admin.patients.destroy');
 
     Route::put('/admin/appointments/{id}/status', [AdminController::class, 'updateAppointmentStatus'])->name('admin.appointments.status');
+
+    // Timeslot Operations
+    Route::post('/timeslots', [TimeSlotController::class, 'store'])->name('timeslots.store');
+    Route::put('/timeslots/{id}', [TimeSlotController::class, 'update'])->name('timeslots.update');
+    Route::delete('/timeslots/{id}', [TimeSlotController::class, 'destroy'])->name('timeslots.destroy');
 });

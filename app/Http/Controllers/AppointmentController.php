@@ -42,7 +42,7 @@ class AppointmentController extends Controller
             'patient_id' => $patient->id,
             'doctor_id' => $data['doctor_id'],
             'time_slot_id' => $data['time_slot_id'],
-            'status' => 'scheduled',
+            'status' => \App\Enums\AppointmentStatusEnum::PENDING->value,
             'notes' => $data['notes'] ?? null,
         ]);
 

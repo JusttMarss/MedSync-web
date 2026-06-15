@@ -157,10 +157,12 @@ export default function Appointments({ appointments, doctors, timeSlots }: Appoi
                                     value={statusFilter}
                                     onChange={(e) => setStatusFilter(e.target.value)}
                                 >
-                                    <option>All Appointments</option>
-                                    <option>scheduled</option>
-                                    <option>completed</option>
-                                    <option>cancelled</option>
+                                    <option value="All Appointments">Semua Appointment</option>
+                                    <option value="pending">Menunggu Konfirmasi</option>
+                                    <option value="confirmed">Disetujui</option>
+                                    <option value="scheduled">Terjadwal</option>
+                                    <option value="completed">Selesai</option>
+                                    <option value="cancelled">Dibatalkan</option>
                                 </select>
                             </div>
                         </div>
@@ -197,11 +199,11 @@ export default function Appointments({ appointments, doctors, timeSlots }: Appoi
                                                     width: '6px',
                                                     height: '6px',
                                                     borderRadius: '50%',
-                                                    background: appointment.status === 'completed' ? '#15803d' : appointment.status === 'cancelled' ? '#b91c1c' : '#0b7285',
+                                                    background: appointment.status === 'completed' ? '#15803d' : appointment.status === 'cancelled' ? '#b91c1c' : appointment.status === 'confirmed' ? '#4338ca' : appointment.status === 'pending' ? '#92400e' : '#0b7285',
                                                     marginRight: '0.5rem',
                                                     display: 'inline-block'
                                                 }}></span>
-                                                {appointment.status}
+                                                {appointment.status === 'confirmed' ? 'Disetujui' : appointment.status === 'pending' ? 'Menunggu' : appointment.status === 'completed' ? 'Selesai' : appointment.status === 'cancelled' ? 'Dibatalkan' : appointment.status === 'scheduled' ? 'Terjadwal' : appointment.status}
                                             </span>
                                         </div>
 
@@ -428,11 +430,11 @@ export default function Appointments({ appointments, doctors, timeSlots }: Appoi
                                                 width: '6px',
                                                 height: '6px',
                                                 borderRadius: '50%',
-                                                background: selectedAppointment.status === 'completed' ? '#15803d' : selectedAppointment.status === 'cancelled' ? '#b91c1c' : '#0b7285',
+                                                background: selectedAppointment.status === 'completed' ? '#15803d' : selectedAppointment.status === 'cancelled' ? '#b91c1c' : selectedAppointment.status === 'confirmed' ? '#4338ca' : selectedAppointment.status === 'pending' ? '#92400e' : '#0b7285',
                                                 marginRight: '0.5rem',
                                                 display: 'inline-block'
                                             }}></span>
-                                            {selectedAppointment.status}
+                                            {selectedAppointment.status === 'confirmed' ? 'Disetujui' : selectedAppointment.status === 'pending' ? 'Menunggu Konfirmasi' : selectedAppointment.status === 'completed' ? 'Selesai' : selectedAppointment.status === 'cancelled' ? 'Dibatalkan' : selectedAppointment.status === 'scheduled' ? 'Terjadwal' : selectedAppointment.status}
                                         </span>
                                     </div>
                                 </div>
