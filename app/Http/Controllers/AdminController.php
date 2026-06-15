@@ -197,12 +197,31 @@ class AdminController extends Controller
     {
         $request->validate([
             'status' => 'required|string|in:pending,scheduled,confirmed,completed,cancelled',
+            'diagnosis' => 'nullable|string',
+            'treatment' => 'nullable|string',
+            'medications' => 'nullable|string',
+            'notes' => 'nullable|string',
         ]);
 
         $appointment = Appointment::findOrFail($id);
         $appointment->update([
             'status' => $request->status,
         ]);
+
+        // If status becomes completed, create/update medical record
+        if ($request->status === 'completed') {
+            \App\Models\MedicalRecord::updateOrCreate(
+                ['appointment_id' => $appointment->id],
+                [
+                    'patient_id' => $appointment->patient_id,
+                    'doctor_id' => $appointment->doctor_id,
+                    'diagnosis' => $request->diagnosis,
+                    'treatment' => $request->treatment,
+                    'medications' => $request->medications ? array_map('trim', explode(',', $request->medications)) : null,
+                    'notes' => $request->notes,
+                ]
+            );
+        }
 
         // If status becomes cancelled, release the time slot
         if ($request->status === 'cancelled') {
@@ -212,71 +231,18 @@ class AdminController extends Controller
         return Redirect::back()->with('success', 'Status appointment berhasil diperbarui.');
     }
 
-        /**
-     * Simpan rekam medis baru (input manual oleh admin/dokter).
+    /**
+     * Delete a medical record (Admin only).
      */
-    public function storeMedicalRecord(Request $request)
+    public function deleteMedicalRecord(Request $request, $id)
     {
-        $request->validate([
-            'appointment_id' => 'required|exists:appointments,id',
-            'diagnosis'      => 'required|string|max:500',
-            'treatment'      => 'nullable|string',
-            'medications'    => 'nullable|array',
-            'notes'          => 'nullable|string',
-        ]);
- 
-        $appointment = \App\Models\Appointment::findOrFail($request->appointment_id);
- 
-        // Cek duplikat
-        if (\App\Models\MedicalRecord::where('appointment_id', $appointment->id)->exists()) {
-            return back()->with('error', 'Rekam medis untuk appointment ini sudah ada.');
+        if ($request->user()->role?->value !== 'admin' && $request->user()->role !== 'admin') {
+            abort(403, 'Unauthorized action.');
         }
- 
-        \App\Models\MedicalRecord::create([
-            'appointment_id' => $appointment->id,
-            'patient_id'     => $appointment->patient_id,
-            'doctor_id'      => $appointment->doctor_id,
-            'diagnosis'      => $request->diagnosis,
-            'treatment'      => $request->treatment,
-            'medications'    => $request->medications ?? [],
-            'notes'          => $request->notes,
-        ]);
- 
-        return back()->with('success', 'Rekam medis berhasil ditambahkan.');
-    }
- 
-    /**
-     * Update rekam medis.
-     */
-    public function updateMedicalRecord(Request $request, $id)
-    {
+
         $record = \App\Models\MedicalRecord::findOrFail($id);
- 
-        $request->validate([
-            'diagnosis'   => 'required|string|max:500',
-            'treatment'   => 'nullable|string',
-            'medications' => 'nullable|array',
-            'notes'       => 'nullable|string',
-        ]);
- 
-        $record->update([
-            'diagnosis'   => $request->diagnosis,
-            'treatment'   => $request->treatment,
-            'medications' => $request->medications ?? [],
-            'notes'       => $request->notes,
-        ]);
- 
-        return back()->with('success', 'Rekam medis berhasil diperbarui.');
+        $record->delete();
+
+        return Redirect::back()->with('success', 'Rekam medis berhasil dihapus.');
     }
- 
-    /**
-     * Hapus rekam medis.
-     */
-    public function deleteMedicalRecord($id)
-    {
-        \App\Models\MedicalRecord::findOrFail($id)->delete();
- 
-        return back()->with('success', 'Rekam medis berhasil dihapus.');
-    }
-    
 }

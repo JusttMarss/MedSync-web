@@ -6,6 +6,7 @@ use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\Appointment;
 use App\Models\TimeSlot;
+use App\Models\MedicalRecord;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -106,7 +107,7 @@ class PageController extends Controller
             return Redirect::route('dashboard')->with('error', 'Akun Anda belum terhubung ke profil pasien.');
         }
 
-        $appointments = Appointment::with(['doctor.user', 'timeSlot'])
+        $appointments = Appointment::with(['doctor.user', 'timeSlot', 'medicalRecord'])
             ->where('patient_id', $patient->id)
             ->orderBy('created_at', 'desc')
             ->get()
@@ -118,6 +119,13 @@ class PageController extends Controller
                 'time'           => $a->timeSlot?->start_time . ' - ' . $a->timeSlot?->end_time,
                 'status'         => $a->status instanceof \App\Enums\AppointmentStatusEnum ? $a->status->value : $a->status,
                 'notes'          => $a->notes,
+                'medical_record' => $a->medicalRecord ? [
+                    'id' => $a->medicalRecord->id,
+                    'diagnosis' => $a->medicalRecord->diagnosis,
+                    'treatment' => $a->medicalRecord->treatment,
+                    'medications' => $this->formatMedications($a->medicalRecord->medications),
+                    'notes' => $a->medicalRecord->notes,
+                ] : null,
             ]);
 
         $doctors = Doctor::with('user')
@@ -493,5 +501,73 @@ class PageController extends Controller
             'upcoming' => $upcoming,
             'userName' => $user->name,
         ]);
+    }
+
+    /**
+     * Medical Records page — view patient medical history depending on role.
+     */
+    public function medicalRecords(Request $request)
+    {
+        $user = $request->user();
+        $role = $user->role?->value ?? $user->role;
+
+        $query = MedicalRecord::with(['patient.user', 'doctor.user', 'appointment.timeSlot']);
+
+        if ($role === 'patient') {
+            $patient = $user->patient;
+            if (!$patient) {
+                return Redirect::back()->with('error', 'Profil pasien tidak ditemukan.');
+            }
+            $query->where('patient_id', $patient->id);
+        }
+
+        $records = $query->orderBy('created_at', 'desc')->get()->map(fn($r) => [
+            'id' => $r->id,
+            'appointment_id' => $r->appointment_id,
+            'patient_id' => $r->patient_id,
+            'patient_name' => $r->patient?->user?->name,
+            'patient_dob' => $r->patient?->date_of_birth,
+            'patient_gender' => $r->patient?->gender?->value ?? $r->patient?->gender,
+            'doctor_id' => $r->doctor_id,
+            'doctor_name' => $r->doctor?->user?->name,
+            'doctor_specialization' => $r->doctor?->specialization,
+            'date' => $r->appointment?->timeSlot?->date ?? $r->created_at->toDateString(),
+            'time' => $r->appointment?->timeSlot?->start_time && $r->appointment?->timeSlot?->end_time 
+                ? $r->appointment->timeSlot->start_time . ' - ' . $r->appointment->timeSlot->end_time 
+                : $r->created_at->format('H:i'),
+            'diagnosis' => $r->diagnosis,
+            'treatment' => $r->treatment,
+            'medications' => $this->formatMedications($r->medications),
+            'notes' => $r->notes,
+        ]);
+
+        return Inertia::render('MedicalRecords', [
+            'records' => $records,
+            'userName' => $user->name,
+            'userRole' => $role,
+        ]);
+    }
+
+    private function formatMedications($medications): array
+    {
+        $meds = [];
+        if (is_array($medications)) {
+            foreach ($medications as $med) {
+                if (is_array($med)) {
+                    $name = $med['name'] ?? '';
+                    $dosage = $med['dosage'] ?? '';
+                    $meds[] = $dosage ? "$name ($dosage)" : $name;
+                } elseif (is_object($med)) {
+                    $name = $med->name ?? '';
+                    $dosage = $med->dosage ?? '';
+                    $meds[] = $dosage ? "$name ($dosage)" : $name;
+                } else {
+                    $meds[] = (string)$med;
+                }
+            }
+        } elseif ($medications) {
+            $meds[] = (string)$medications;
+        }
+        return $meds;
     }
 }

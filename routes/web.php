@@ -28,9 +28,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/schedule', [PageController::class, 'schedule'])->name('schedule');
     Route::get('/profile', [PageController::class, 'profile'])->name('profile');
     Route::put('/profile/update', [PageController::class, 'updateProfile'])->name('profile.update');
-
-    // ── Rekam Medis (pasien lihat) ────────────────────────────────
-    Route::get('/medical-records', [MedicalRecordController::class, 'index'])->name('medical-records');
+    Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
+    Route::get('/medical-records', [PageController::class, 'medicalRecords'])->name('medical-records');
 
     // Admin Operations
     Route::post('/admin/doctors', [AdminController::class, 'storeDoctor'])->name('admin.doctors.store');
@@ -42,6 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/admin/patients/{id}', [AdminController::class, 'deletePatient'])->name('admin.patients.destroy');
 
     Route::put('/admin/appointments/{id}/status', [AdminController::class, 'updateAppointmentStatus'])->name('admin.appointments.status');
+    Route::delete('/admin/medical-records/{id}', [AdminController::class, 'deleteMedicalRecord'])->name('admin.medical-records.destroy');
 
     // ── Rekam Medis Admin (input manual) ─────────────────────────
     Route::post('/admin/medical-records', [AdminController::class, 'storeMedicalRecord'])->name('admin.medical-records.store');

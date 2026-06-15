@@ -25,20 +25,22 @@ function getAuthLinks(role: string | null | undefined) {
         case 'admin':
             return [
                 { href: '/dashboard', label: 'Dashboard' },
-                { href: '/profile',   label: 'Profile' },
+                { href: '/medical-records', label: 'Medical Records' },
+                { href: '/profile', label: 'Profile' },
             ];
         case 'doctor':
             return [
                 { href: '/dashboard', label: 'Dashboard' },
-                { href: '/profile',   label: 'Profile' },
+                { href: '/medical-records', label: 'Medical Records' },
+                { href: '/profile', label: 'Profile' },
             ];
         default: // patient
             return [
-                { href: '/dashboard',       label: 'Dashboard' },
-                { href: '/appointments',    label: 'Appointments' },
-                { href: '/medical-records', label: 'Rekam Medis' }, // ← BARU
-                { href: '/schedule',        label: 'Schedule' },
-                { href: '/profile',         label: 'Profile' },
+                { href: '/dashboard', label: 'Dashboard' },
+                { href: '/appointments', label: 'Appointments' },
+                { href: '/schedule', label: 'Schedule' },
+                { href: '/medical-records', label: 'Medical Records' },
+                { href: '/profile', label: 'Profile' },
             ];
     }
 }

@@ -65,10 +65,46 @@ export default function DoctorDashboard({ userName, stats, todaySchedule, upcomi
     const greeting = getGreeting();
     const [activeTab, setActiveTab] = useState<'overview' | 'timeslots'>('overview');
 
+    // Medical record inputs on completion
+    const [completingAppointmentId, setCompletingAppointmentId] = useState<number | null>(null);
+    const [diagnosis, setDiagnosis] = useState('');
+    const [treatment, setTreatment] = useState('');
+    const [medications, setMedications] = useState('');
+    const [notes, setNotes] = useState('');
+
     const updateStatus = (id: number, status: string) => {
-        if (confirm(`Apakah Anda yakin ingin mengubah status appointment menjadi ${status === 'completed' ? 'Selesai' : 'Dibatalkan'}?`)) {
+        if (status === 'completed') {
+            setCompletingAppointmentId(id);
+            setDiagnosis('');
+            setTreatment('');
+            setMedications('');
+            setNotes('');
+            return;
+        }
+
+        if (confirm(`Apakah Anda yakin ingin mengubah status appointment menjadi Dibatalkan?`)) {
             router.put(`/appointments/${id}/status`, { status });
         }
+    };
+
+    const handleCompleteSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!diagnosis.trim()) {
+            alert('Diagnosis utama wajib diisi.');
+            return;
+        }
+        
+        router.put(`/appointments/${completingAppointmentId}/status`, {
+            status: 'completed',
+            diagnosis,
+            treatment,
+            medications,
+            notes
+        }, {
+            onSuccess: () => {
+                setCompletingAppointmentId(null);
+            }
+        });
     };
 
     return (
@@ -340,6 +376,95 @@ export default function DoctorDashboard({ userName, stats, todaySchedule, upcomi
 
                 {activeTab === 'timeslots' && (
                     <TimeSlotManager timeSlots={myTimeSlots} isAdmin={false} />
+                )}
+
+                {/* Completion & Medical Record Modal */}
+                {completingAppointmentId && (
+                    <div className="modal-overlay" onClick={() => setCompletingAppointmentId(null)}>
+                        <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '550px', width: '90%' }}>
+                            <div className="modal-header">
+                                <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 800 }}>
+                                    <Clipboard size={20} style={{ color: 'var(--color-primary)' }} />
+                                    Input Rekam Medis Pasien
+                                </h3>
+                                <button className="modal-close" onClick={() => setCompletingAppointmentId(null)}>
+                                    <XCircle size={20} />
+                                </button>
+                            </div>
+                            <form onSubmit={handleCompleteSubmit}>
+                                <div className="modal-body">
+                                    <p style={{ color: 'var(--color-text-muted)', fontSize: '0.88rem', marginBottom: '1.25rem' }}>
+                                        Masukkan rekam medis pasien sebelum menyelesaikan appointment ini.
+                                    </p>
+                                    
+                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                                        <div className="form-group">
+                                            <label className="form-label" style={{ fontWeight: 600 }}>Diagnosis Utama <span style={{ color: '#ef4444' }}>*</span></label>
+                                            <textarea
+                                                className="filter-input"
+                                                style={{ minHeight: '80px', width: '100%', borderRadius: 'var(--radius-md)' }}
+                                                placeholder="Tulis diagnosis pasien..."
+                                                value={diagnosis}
+                                                onChange={(e) => setDiagnosis(e.target.value)}
+                                                required
+                                            />
+                                        </div>
+                                        
+                                        <div className="form-group">
+                                            <label className="form-label" style={{ fontWeight: 600 }}>Tindakan / Pengobatan (Treatment)</label>
+                                            <textarea
+                                                className="filter-input"
+                                                style={{ minHeight: '80px', width: '100%', borderRadius: 'var(--radius-md)' }}
+                                                placeholder="Tulis tindakan medis atau perawatan yang diberikan..."
+                                                value={treatment}
+                                                onChange={(e) => setTreatment(e.target.value)}
+                                            />
+                                        </div>
+                                        
+                                        <div className="form-group">
+                                            <label className="form-label" style={{ fontWeight: 600 }}>Resep Obat (Pisahkan dengan koma)</label>
+                                            <input
+                                                type="text"
+                                                className="filter-input"
+                                                style={{ width: '100%', borderRadius: 'var(--radius-md)' }}
+                                                placeholder="Paracetamol 500mg, Amoxicillin 500mg..."
+                                                value={medications}
+                                                onChange={(e) => setMedications(e.target.value)}
+                                            />
+                                        </div>
+                                        
+                                        <div className="form-group">
+                                            <label className="form-label" style={{ fontWeight: 600 }}>Catatan Tambahan</label>
+                                            <textarea
+                                                className="filter-input"
+                                                style={{ minHeight: '60px', width: '100%', borderRadius: 'var(--radius-md)' }}
+                                                placeholder="Catatan tambahan untuk pasien..."
+                                                value={notes}
+                                                onChange={(e) => setNotes(e.target.value)}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="modal-footer" style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end', marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid var(--color-border)' }}>
+                                    <button
+                                        type="button"
+                                        className="btn btn-outline"
+                                        onClick={() => setCompletingAppointmentId(null)}
+                                        style={{ borderRadius: 'var(--radius-md)' }}
+                                    >
+                                        Batal
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary"
+                                        style={{ borderRadius: 'var(--radius-md)' }}
+                                    >
+                                        Simpan & Selesaikan
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 )}
             </section>
         </MainLayout>
