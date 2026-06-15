@@ -7,6 +7,7 @@ use App\Http\Requests\Appointment\StoreAppointmentRequest;
 use App\Http\Resources\AppointmentResource;
 use App\Models\Appointment;
 use App\Models\TimeSlot;
+use App\Enums\AppointmentStatusEnum;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -28,14 +29,14 @@ class AppointmentController extends Controller
     {
         $appointment = Appointment::with(['patient.user', 'doctor.user', 'timeSlot'])->findOrFail($id);
 
-        if ($appointment->status !== 'pending') {
+        if ($appointment->status !== AppointmentStatusEnum::PENDING) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Hanya appointment dengan status pending yang bisa di-approve.',
             ], 422);
         }
 
-        $appointment->update(['status' => 'approved']);
+        $appointment->update(['status' => AppointmentStatusEnum::CONFIRMED->value]);
 
         return response()->json([
             'status' => 'success',
@@ -49,7 +50,7 @@ class AppointmentController extends Controller
     {
         $appointment = Appointment::with(['patient.user', 'doctor.user', 'timeSlot'])->findOrFail($id);
 
-        if ($appointment->status !== 'pending') {
+        if ($appointment->status !== AppointmentStatusEnum::PENDING) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Hanya appointment dengan status pending yang bisa ditolak.',
@@ -59,7 +60,7 @@ class AppointmentController extends Controller
         // Kembalikan slot ke tidak-dipesan
         DB::transaction(function () use ($appointment, $request) {
             $appointment->update([
-                'status' => 'rejected',
+                'status' => AppointmentStatusEnum::CANCELLED->value,
                 'notes' => $request->filled('reason') ? $appointment->notes . ' [Alasan Penolakan: ' . $request->reason . ']' : $appointment->notes,
             ]);
             $appointment->timeSlot->update(['is_booked' => false]);
@@ -130,7 +131,7 @@ class AppointmentController extends Controller
         $patient = $request->user()->patient;
         $appointment = Appointment::where('patient_id', $patient->id)->findOrFail($id);
 
-        if (!in_array($appointment->status, ['pending', 'approved'])) {
+        if (!in_array($appointment->status, [AppointmentStatusEnum::PENDING, AppointmentStatusEnum::CONFIRMED])) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Appointment tidak dapat dibatalkan.',
@@ -138,7 +139,7 @@ class AppointmentController extends Controller
         }
 
         DB::transaction(function () use ($appointment) {
-            $appointment->update(['status' => 'cancelled']);
+            $appointment->update(['status' => AppointmentStatusEnum::CANCELLED->value]);
             $appointment->timeSlot->update(['is_booked' => false]);
         });
 
@@ -172,14 +173,14 @@ class AppointmentController extends Controller
         $doctor = $request->user()->doctor;
         $appointment = Appointment::where('doctor_id', $doctor->id)->findOrFail($id);
 
-        if ($appointment->status !== 'approved') {
+        if ($appointment->status !== AppointmentStatusEnum::CONFIRMED) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Hanya appointment yang sudah di-approve yang bisa ditandai selesai.',
             ], 422);
         }
 
-        $appointment->update(['status' => 'done']);
+        $appointment->update(['status' => AppointmentStatusEnum::COMPLETED->value]);
 
         return response()->json([
             'status' => 'success',

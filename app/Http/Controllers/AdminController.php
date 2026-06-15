@@ -204,6 +204,11 @@ class AdminController extends Controller
             'status' => $request->status,
         ]);
 
+        // If status becomes cancelled, release the time slot
+        if ($request->status === 'cancelled') {
+            $appointment->timeSlot?->update(['is_booked' => false]);
+        }
+
         return Redirect::back()->with('success', 'Status appointment berhasil diperbarui.');
     }
 

@@ -18,6 +18,7 @@ interface DashboardProps {
         specialization: string;
         date: string;
         time: string;
+        status?: string;
     } | null;
     userName?: string;
 }
@@ -211,9 +212,16 @@ export default function Dashboard({ stats, upcoming, userName }: DashboardProps)
                                         {upcoming.specialization}
                                     </span>
                                 </div>
-                                <span className="status-chip status-scheduled">
-                                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#0b7285', display: 'inline-block', marginRight: '0.4rem' }} />
-                                    Terjadwal
+                                <span className={`status-chip status-${upcoming.status || 'scheduled'}`}>
+                                    <span style={{
+                                        width: '6px',
+                                        height: '6px',
+                                        borderRadius: '50%',
+                                        background: upcoming.status === 'confirmed' ? '#4338ca' : upcoming.status === 'pending' ? '#92400e' : '#0b7285',
+                                        display: 'inline-block',
+                                        marginRight: '0.4rem'
+                                    }} />
+                                    {upcoming.status === 'confirmed' ? 'Disetujui' : upcoming.status === 'pending' ? 'Menunggu Konfirmasi' : upcoming.status === 'completed' ? 'Selesai' : upcoming.status === 'cancelled' ? 'Dibatalkan' : 'Terjadwal'}
                                 </span>
                             </div>
 
