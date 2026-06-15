@@ -4,11 +4,8 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\WebAuthController;
 use App\Http\Controllers\AdminController;
-<<<<<<< HEAD
 use App\Http\Controllers\MedicalRecordController;
-=======
 use App\Http\Controllers\TimeSlotController;
->>>>>>> origin
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
@@ -51,9 +48,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/admin/medical-records/{id}', [AdminController::class, 'updateMedicalRecord'])->name('admin.medical-records.update');
     Route::delete('/admin/medical-records/{id}', [AdminController::class, 'deleteMedicalRecord'])->name('admin.medical-records.destroy');
 
-    });
     // Timeslot Operations
     Route::post('/timeslots', [TimeSlotController::class, 'store'])->name('timeslots.store');
     Route::put('/timeslots/{id}', [TimeSlotController::class, 'update'])->name('timeslots.update');
     Route::delete('/timeslots/{id}', [TimeSlotController::class, 'destroy'])->name('timeslots.destroy');
-});
+    });
