@@ -1,12 +1,8 @@
 import { Link, router, usePage } from '@inertiajs/react';
-<<<<<<< HEAD
-import { HeartPulse, LayoutDashboard, CalendarDays, Clock3, User, LogOut, Stethoscope, ShieldCheck, FileText } from 'lucide-react';
-=======
 import {
     HeartPulse, LayoutDashboard, CalendarDays, Clock3,
-    User, LogOut, Stethoscope, ShieldCheck, ClipboardList,
+    User, LogOut, Stethoscope, ShieldCheck, ClipboardList, FileText
 } from 'lucide-react';
->>>>>>> 13069ecbe5b3823c20858bd726fcb7b1d152dcce
 import type { SharedProps } from '../types';
 
 interface NavLink {
