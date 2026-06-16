@@ -7,6 +7,7 @@ export interface Doctor {
     specialization: string;
     phone?: string;
     bio?: string;
+    avatar_url?: string;
 }
 
 export interface Stats {
@@ -22,6 +23,7 @@ export interface SharedProps extends Record<string, unknown> {
             name: string;
             email: string;
             role: string;
+            avatar_url?: string;
         } | null;
     };
     flash?: {

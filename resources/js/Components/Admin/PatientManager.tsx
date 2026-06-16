@@ -10,6 +10,7 @@ interface Patient {
     gender: string;
     address: string;
     phone: string;
+    avatar_url?: string;
 }
 
 interface Props {
@@ -118,7 +119,17 @@ export default function PatientManager({ patients }: Props) {
                                 <tr key={p.id}>
                                     <td>
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                            <div className="appointment-mini-avatar" style={{ width: 32, height: 32, fontSize: '0.75rem' }}>{p.name.charAt(0)}</div>
+                                            <div className="appointment-mini-avatar" style={{ width: 32, height: 32, fontSize: '0.75rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                {p.avatar_url ? (
+                                                    <img
+                                                        src={p.avatar_url}
+                                                        alt={p.name}
+                                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                    />
+                                                ) : (
+                                                    p.name.charAt(0)
+                                                )}
+                                            </div>
                                             <span style={{ fontWeight: 600 }}>{p.name}</span>
                                         </div>
                                     </td>

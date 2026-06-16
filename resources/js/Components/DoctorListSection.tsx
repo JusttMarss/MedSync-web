@@ -78,8 +78,16 @@ export default function DoctorListSection({ doctors }: DoctorListSectionProps) {
                         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: 'var(--gradient-button)' }} />
                         
                         <div className="doctor-card-header">
-                            <div className="doctor-avatar" style={{ background: 'var(--color-primary-soft)', color: 'var(--color-primary)', border: '2px solid white', boxShadow: 'var(--shadow-soft)' }}>
-                                {getInitials(doctor.name ?? '')}
+                            <div className="doctor-avatar" style={{ background: 'var(--color-primary-soft)', color: 'var(--color-primary)', border: '2px solid white', boxShadow: 'var(--shadow-soft)', overflow: 'hidden' }}>
+                                {doctor.avatar_url ? (
+                                    <img
+                                        src={doctor.avatar_url}
+                                        alt={doctor.name}
+                                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                    />
+                                ) : (
+                                    doctor.name?.charAt(0)
+                                )}
                             </div>
                             <div>
                                 <h3 style={{ fontSize: '1.2rem', fontWeight: 700, margin: 0, color: 'var(--color-text)' }}>{doctor.name}</h3>

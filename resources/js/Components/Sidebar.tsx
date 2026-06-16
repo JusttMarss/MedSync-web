@@ -95,14 +95,26 @@ export default function Sidebar({ authLinks, roleLabel }: SidebarProps) {
                         border: '1px solid var(--color-border)',
                         marginBottom: '0.75rem',
                     }}>
-                        <div style={{
-                            width: '36px', height: '36px', borderRadius: '50%',
-                            background: 'var(--gradient-button)',
-                            color: '#fff', fontWeight: 700, fontSize: '0.85rem',
-                            display: 'grid', placeItems: 'center', flexShrink: 0,
-                        }}>
-                            {getInitials(user.name || '?')}
-                        </div>
+                        {user.avatar_url ? (
+                            <img
+                                src={user.avatar_url}
+                                alt={user.name}
+                                style={{
+                                    width: '36px', height: '36px', borderRadius: '50%',
+                                    objectFit: 'cover', flexShrink: 0,
+                                    border: '2px solid var(--color-border)',
+                                }}
+                            />
+                        ) : (
+                            <div style={{
+                                width: '36px', height: '36px', borderRadius: '50%',
+                                background: 'var(--gradient-button)',
+                                color: '#fff', fontWeight: 700, fontSize: '0.85rem',
+                                display: 'grid', placeItems: 'center', flexShrink: 0,
+                            }}>
+                                {getInitials(user.name || '?')}
+                            </div>
+                        )}
                         <div style={{ minWidth: 0 }}>
                             <p style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                 {user.name}

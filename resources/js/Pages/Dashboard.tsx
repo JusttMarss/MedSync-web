@@ -15,6 +15,7 @@ interface DashboardProps {
     upcoming?: {
         id?: number;
         doctor: string;
+        doctor_avatar_url?: string;
         specialization: string;
         date: string;
         time: string;
@@ -81,7 +82,7 @@ export default function Dashboard({ stats, upcoming, userName }: DashboardProps)
                                 {userName ? `Hai, ${userName.split(' ')[0]}! 👋` : 'Dashboard Pasien'}
                             </h2>
                             <p style={{ color: 'rgba(255,255,255,0.7)', marginTop: '0.5rem', fontSize: '0.95rem' }}>
-                                Pantau jadwal kesehatan, dokter, dan appointment Anda dalam satu tempat.
+                                Pantau jadwal kesehatan, doctor, dan appointment Anda dalam satu tempat.
                             </p>
                         </div>
 
@@ -201,8 +202,16 @@ export default function Dashboard({ stats, upcoming, userName }: DashboardProps)
                             <div className="upcoming-accent-strip" />
 
                             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.25rem', paddingBottom: '1.25rem', borderBottom: '1px solid var(--color-border)' }}>
-                                <div className="doctor-avatar" style={{ width: '52px', height: '52px', fontSize: '1.1rem' }}>
-                                    {getInitials(upcoming.doctor)}
+                                <div className="doctor-avatar" style={{ width: '52px', height: '52px', fontSize: '1.1rem', overflow: 'hidden' }}>
+                                    {upcoming.doctor_avatar_url ? (
+                                        <img
+                                            src={upcoming.doctor_avatar_url}
+                                            alt={upcoming.doctor}
+                                            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                                        />
+                                    ) : (
+                                        getInitials(upcoming.doctor)
+                                    )}
                                 </div>
                                 <div style={{ flex: 1 }}>
                                     <h4 style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--color-text)' }}>

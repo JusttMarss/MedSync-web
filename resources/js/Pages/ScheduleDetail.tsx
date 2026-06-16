@@ -18,6 +18,7 @@ interface DoctorDetail {
     email?: string;
     phone?: string;
     bio?: string;
+    avatar_url?: string;
 }
 
 interface ScheduleDetailProps {
@@ -153,8 +154,16 @@ export default function ScheduleDetail({ doctor, timeSlots }: ScheduleDetailProp
                 <div className="dashboard-card" style={{ marginBottom: '2rem' }}>
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1.25rem', flexWrap: 'wrap' }}>
                         {/* Avatar */}
-                        <div className="doctor-avatar" style={{ width: '64px', height: '64px', fontSize: '1.4rem', flexShrink: 0 }}>
-                            {getInitials(doctor.name ?? '')}
+                        <div className="doctor-avatar" style={{ width: '64px', height: '64px', fontSize: '1.4rem', flexShrink: 0, overflow: 'hidden' }}>
+                            {doctor.avatar_url ? (
+                                <img
+                                    src={doctor.avatar_url}
+                                    alt={doctor.name}
+                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                />
+                            ) : (
+                                getInitials(doctor.name ?? '')
+                            )}
                         </div>
 
                         {/* Info */}
