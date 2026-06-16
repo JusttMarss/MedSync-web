@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
     Route::put('/appointments/{id}/status', [AppointmentController::class, 'updateStatus'])->name('appointments.status.update');
     Route::get('/schedule', [PageController::class, 'schedule'])->name('schedule');
+    Route::get('/schedule/{id}', [PageController::class, 'scheduleDetail'])->name('schedule.detail');
     Route::get('/profile', [PageController::class, 'profile'])->name('profile');
     Route::put('/profile/update', [PageController::class, 'updateProfile'])->name('profile.update');
     Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');

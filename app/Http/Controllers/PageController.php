@@ -158,25 +158,52 @@ class PageController extends Controller
     }
 
     /**
-     * Schedule page — show timeslots grouped by doctor.
+     * Schedule page — show doctors list with slot counts.
      */
     public function schedule()
     {
-        $doctors = Doctor::with(['timeSlots' => fn($q) => $q->orderBy('date')])->get()
+        $doctors = Doctor::with(['user', 'timeSlots'])->get()
             ->map(fn($d) => [
-                'id'        => $d->id,
-                'name'      => $d->user?->name,
-                'timeSlots' => $d->timeSlots->map(fn($t) => [
-                    'id'         => $t->id,
-                    'date'       => $t->date,
-                    'start_time' => $t->start_time,
-                    'end_time'   => $t->end_time,
-                    'is_booked'  => (bool) $t->is_booked,
-                ]),
+                'id'             => $d->id,
+                'name'           => $d->user?->name,
+                'specialization' => $d->specialization,
+                'totalSlots'     => $d->timeSlots->count(),
+                'availableSlots' => $d->timeSlots->where('is_booked', false)->count(),
             ]);
 
         return Inertia::render('Schedule', [
             'doctors' => $doctors,
+        ]);
+    }
+
+    /**
+     * Schedule Detail page — show all timeslots for a specific doctor.
+     */
+    public function scheduleDetail($doctorId)
+    {
+        $doctor = Doctor::with(['user', 'timeSlots' => fn($q) => $q->orderBy('date')->orderBy('start_time')])
+            ->findOrFail($doctorId);
+
+        $doctorData = [
+            'id'             => $doctor->id,
+            'name'           => $doctor->user?->name,
+            'specialization' => $doctor->specialization,
+            'email'          => $doctor->user?->email,
+            'phone'          => $doctor->phone,
+            'bio'            => $doctor->bio,
+        ];
+
+        $timeSlots = $doctor->timeSlots->map(fn($t) => [
+            'id'         => $t->id,
+            'date'       => $t->date,
+            'start_time' => $t->start_time,
+            'end_time'   => $t->end_time,
+            'is_booked'  => (bool) $t->is_booked,
+        ]);
+
+        return Inertia::render('ScheduleDetail', [
+            'doctor'    => $doctorData,
+            'timeSlots' => $timeSlots,
         ]);
     }
 
