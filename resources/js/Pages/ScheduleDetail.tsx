@@ -233,7 +233,7 @@ export default function ScheduleDetail({ doctor, timeSlots }: ScheduleDetailProp
                     <div style={{ marginTop: '1.25rem', paddingTop: '1.25rem', borderTop: '1px solid var(--color-border)' }}>
                         <button
                             className="btn btn-primary btn-sm"
-                            onClick={() => router.visit(`/appointments/create?doctor_id=${doctor.id}`)}
+                            onClick={() => router.visit(`/appointments`)}
                         >
                             Buat Janji dengan Dokter Ini
                         </button>
@@ -256,7 +256,7 @@ export default function ScheduleDetail({ doctor, timeSlots }: ScheduleDetailProp
                                 {/* Date Header */}
                                 <div style={{
                                     display: 'flex',
-                                    alignItems: 'center',
+                                    alignItems: 'start',
                                     gap: '0.5rem',
                                     marginBottom: '1rem',
                                     paddingBottom: '0.75rem',
@@ -287,6 +287,7 @@ export default function ScheduleDetail({ doctor, timeSlots }: ScheduleDetailProp
                                     {grouped[date].map((slot) => (
                                         <div key={slot.id} className="time-slot-row" style={{
                                             opacity: slot.is_booked ? 0.6 : 1,
+                                            justifyContent: 'flex-end',
                                         }}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-text)' }}>
                                                 <IconClock />
