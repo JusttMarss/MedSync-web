@@ -1,4 +1,4 @@
-import { usePage } from '@inertiajs/react';
+import { usePage, Link } from '@inertiajs/react';
 import { Bell, Search } from 'lucide-react';
 import type { SharedProps } from '../types';
 
@@ -56,12 +56,14 @@ export default function Topbar() {
                 </button>
 
                 {/* User Chip */}
-                <div style={{
+                <Link href="/profile" style={{
                     display: 'flex', alignItems: 'center', gap: '0.6rem',
                     padding: '0.5rem 0.75rem',
                     border: '1px solid var(--color-border)',
                     borderRadius: 'var(--radius-full)',
                     background: 'var(--color-surface)',
+                    textDecoration: 'none',
+                    cursor: 'pointer',
                 }}>
                     {user?.avatar_url ? (
                         <img
@@ -97,7 +99,7 @@ export default function Topbar() {
                             {badge.label}
                         </span>
                     </div>
-                </div>
+                </Link>
             </div>
         </header>
     );
