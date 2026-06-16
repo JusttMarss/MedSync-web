@@ -224,7 +224,7 @@ export default function ScheduleDetail({ doctor, timeSlots }: ScheduleDetailProp
                     <div style={{ marginTop: '1.25rem', paddingTop: '1.25rem', borderTop: '1px solid var(--color-border)' }}>
                         <button
                             className="btn btn-primary btn-sm"
-                            onClick={() => router.visit(`/appointments/create?doctor_id=${doctor.id}`)}
+                            onClick={() => router.visit(`/appointments`)}
                         >
                             Buat Janji dengan Dokter Ini
                         </button>
