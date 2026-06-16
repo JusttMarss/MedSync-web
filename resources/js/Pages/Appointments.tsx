@@ -12,6 +12,7 @@ interface Doctor {
     id: number;
     name: string;
     specialization: string;
+    avatar_url?: string;
 }
 
 interface AppointmentsProps {
@@ -173,8 +174,12 @@ export default function Appointments({ appointments, doctors, timeSlots }: Appoi
                                 filteredAppointments.map((appointment) => (
                                     <div key={appointment.id} className="appointment-card">
                                         <div className="appointment-card-doctor">
-                                            <div className="appointment-card-avatar">
-                                                {appointment.doctor.charAt(0)}
+                                            <div className="appointment-card-avatar" style={{ overflow: 'hidden' }}>
+                                                {appointment.doctor_avatar_url ? (
+                                                    <img src={appointment.doctor_avatar_url} alt={appointment.doctor} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                ) : (
+                                                    appointment.doctor.charAt(0)
+                                                )}
                                             </div>
                                             <div className="appointment-card-info">
                                                 <span className="appointment-card-name">{appointment.doctor}</span>
@@ -250,8 +255,12 @@ export default function Appointments({ appointments, doctors, timeSlots }: Appoi
                                     >
                                         {selectedDoctorObj ? (
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flex: 1, minWidth: 0 }}>
-                                                <div className="doctor-dropdown-avatar">
-                                                    {selectedDoctorObj.name.charAt(0)}
+                                                <div className="doctor-dropdown-avatar" style={{ overflow: 'hidden' }}>
+                                                    {selectedDoctorObj.avatar_url ? (
+                                                        <img src={selectedDoctorObj.avatar_url} alt={selectedDoctorObj.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                                                    ) : (
+                                                        selectedDoctorObj.name.charAt(0)
+                                                    )}
                                                 </div>
                                                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', textAlign: 'left', minWidth: 0 }}>
                                                     <span style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -295,8 +304,12 @@ export default function Appointments({ appointments, doctors, timeSlots }: Appoi
                                                             setDoctorDropdownOpen(false);
                                                         }}
                                                     >
-                                                        <div className="doctor-dropdown-item-avatar">
-                                                            {d.name.charAt(0)}
+                                                        <div className="doctor-dropdown-item-avatar" style={{ overflow: 'hidden' }}>
+                                                            {d.avatar_url ? (
+                                                                <img src={d.avatar_url} alt={d.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                                                            ) : (
+                                                                d.name.charAt(0)
+                                                            )}
                                                         </div>
                                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', flex: 1, minWidth: 0 }}>
                                                             <span style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
@@ -405,8 +418,12 @@ export default function Appointments({ appointments, doctors, timeSlots }: Appoi
                             </div>
                             <div className="details-modal-body">
                                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', borderBottom: '1px solid var(--color-border)', paddingBottom: '1.25rem' }}>
-                                    <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--color-primary)', color: '#fff', display: 'grid', placeItems: 'center', fontSize: '1.2rem', fontWeight: 'bold' }}>
-                                        {selectedAppointment.doctor.charAt(0)}
+                                    <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: 'var(--color-primary)', color: '#fff', display: 'grid', placeItems: 'center', fontSize: '1.2rem', fontWeight: 'bold', overflow: 'hidden' }}>
+                                        {selectedAppointment.doctor_avatar_url ? (
+                                            <img src={selectedAppointment.doctor_avatar_url} alt={selectedAppointment.doctor} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                        ) : (
+                                            selectedAppointment.doctor.charAt(0)
+                                        )}
                                     </div>
                                     <div>
                                         <h4 style={{ fontSize: '1.1rem', fontWeight: 800 }}>{selectedAppointment.doctor}</h4>

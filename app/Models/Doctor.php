@@ -30,4 +30,9 @@ class Doctor extends Model
     {
         return $this->hasMany(MedicalRecord::class);
     }
+
+    protected function getAvatarUrlAttribute(): ?string
+    {
+        return $this->user->avatar_url;
+    }
 }

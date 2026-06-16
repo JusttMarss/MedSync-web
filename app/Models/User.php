@@ -17,12 +17,15 @@ class User extends Authenticatable
         'password',
         'role',
         'is_active',
+        'avatar',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
     ];
+
+    protected $appends = ['avatar_url'];
 
     protected function casts(): array
     {
@@ -32,6 +35,11 @@ class User extends Authenticatable
             'is_active'         => 'boolean',
             'role'              => \App\Enums\RoleEnum::class,
         ];
+    }
+
+    public function getAvatarUrlAttribute()
+    {
+        return $this->avatar ? asset('storage/' . $this->avatar) : null;
     }
 
     public function doctor()

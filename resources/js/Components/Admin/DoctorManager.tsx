@@ -5,6 +5,7 @@ import { Stethoscope, Plus, Pencil, Trash2, X, Search } from 'lucide-react';
 interface Doctor {
     id: number; name: string; email: string;
     specialization: string; phone: string; bio: string | null; is_active: boolean;
+    avatar_url?: string;
 }
 
 interface Props { doctors: Doctor[]; }
@@ -73,7 +74,17 @@ export default function DoctorManager({ doctors }: Props) {
                             {filtered.length > 0 ? filtered.map(d => (
                                 <tr key={d.id}>
                                     <td><div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                        <div className="appointment-mini-avatar" style={{ width: 32, height: 32, fontSize: '0.75rem' }}>{d.name.charAt(0)}</div>
+                                        <div className="appointment-mini-avatar" style={{ width: 32, height: 32, fontSize: '0.75rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            {d.avatar_url ? (
+                                                <img
+                                                    src={d.avatar_url}
+                                                    alt={d.name}
+                                                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                />
+                                            ) : (
+                                                d.name.charAt(0)
+                                            )}
+                                        </div>
                                         <span style={{ fontWeight: 600 }}>{d.name}</span>
                                     </div></td>
                                     <td style={{ fontSize: '0.85rem' }}>{d.email}</td>

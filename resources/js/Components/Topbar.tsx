@@ -63,14 +63,26 @@ export default function Topbar() {
                     borderRadius: 'var(--radius-full)',
                     background: 'var(--color-surface)',
                 }}>
-                    <div style={{
-                        width: '30px', height: '30px', borderRadius: '50%',
-                        background: 'var(--gradient-button)',
-                        color: '#fff', fontWeight: 700, fontSize: '0.75rem',
-                        display: 'grid', placeItems: 'center',
-                    }}>
-                        {getInitials(user?.name || '?')}
-                    </div>
+                    {user?.avatar_url ? (
+                        <img
+                            src={user.avatar_url}
+                            alt={user.name}
+                            style={{
+                                width: '30px', height: '30px', borderRadius: '50%',
+                                objectFit: 'cover',
+                                border: '2px solid var(--color-border)',
+                            }}
+                        />
+                    ) : (
+                        <div style={{
+                            width: '30px', height: '30px', borderRadius: '50%',
+                            background: 'var(--gradient-button)',
+                            color: '#fff', fontWeight: 700, fontSize: '0.75rem',
+                            display: 'grid', placeItems: 'center',
+                        }}>
+                            {getInitials(user?.name || '?')}
+                        </div>
+                    )}
                     <div>
                         <p style={{ fontWeight: 700, fontSize: '0.82rem', color: 'var(--color-text)', lineHeight: 1.2 }}>
                             {user?.name?.split(' ')[0]}

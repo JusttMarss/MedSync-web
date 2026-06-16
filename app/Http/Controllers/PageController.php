@@ -9,6 +9,7 @@ use App\Models\TimeSlot;
 use App\Models\MedicalRecord;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class PageController extends Controller
@@ -48,6 +49,7 @@ class PageController extends Controller
                     'name'           => $d->user?->name,
                     'specialization' => $d->specialization,
                     'bio'            => $d->bio,
+                    'avatar_url'     => $d->user?->avatar_url,
                 ]),
             'todaySlots' => $todaySlots,
         ]);
@@ -80,6 +82,7 @@ class PageController extends Controller
             'specialization' => $d->specialization,
             'phone'          => $d->phone,
             'bio'            => $d->bio,
+            'avatar_url'     => $d->user?->avatar_url,
         ]);
 
         $specializations = Doctor::whereHas('user', fn($q) => $q->where('is_active', true))
@@ -114,6 +117,7 @@ class PageController extends Controller
             ->map(fn($a) => [
                 'id'             => $a->id,
                 'doctor'         => $a->doctor?->user?->name,
+                'doctor_avatar_url' => $a->doctor?->user?->avatar_url,
                 'specialization' => $a->doctor?->specialization,
                 'date'           => $a->timeSlot?->date,
                 'time'           => $a->timeSlot?->start_time . ' - ' . $a->timeSlot?->end_time,
@@ -135,6 +139,7 @@ class PageController extends Controller
                 'id'   => $d->id,
                 'name' => $d->user?->name,
                 'specialization' => $d->specialization,
+                'avatar_url'     => $d->user?->avatar_url,
             ]);
 
         $timeSlots = TimeSlot::with('doctor')
@@ -169,6 +174,7 @@ class PageController extends Controller
                 'specialization' => $d->specialization,
                 'totalSlots'     => $d->timeSlots->count(),
                 'availableSlots' => $d->timeSlots->where('is_booked', false)->count(),
+                'avatar_url'     => $d->user?->avatar_url,
             ]);
 
         return Inertia::render('Schedule', [
@@ -191,6 +197,7 @@ class PageController extends Controller
             'email'          => $doctor->user?->email,
             'phone'          => $doctor->phone,
             'bio'            => $doctor->bio,
+            'avatar_url'     => $doctor->user?->avatar_url,
         ];
 
         $timeSlots = $doctor->timeSlots->map(fn($t) => [
@@ -208,53 +215,95 @@ class PageController extends Controller
     }
 
     /**
-     * Profile page — tampilkan data user/patient sederhana.
+     * Profile page — tampilkan data user/patient/doctor sederhana.
      */
     public function profile(Request $request)
     {
         $user = $request->user();
         $patient = null;
-        if ($user) {
+        $doctor = null;
+        $role = $user->role?->value ?? $user->role;
+
+        if ($role === 'patient') {
             $patient = Patient::where('user_id', $user->id)->first();
+        } elseif ($role === 'doctor') {
+            $doctor = Doctor::where('user_id', $user->id)->first();
         }
 
         return Inertia::render('Profile', [
             'user'    => $user,
             'patient' => $patient,
+            'doctor'  => $doctor,
         ]);
     }
 
     /**
-     * Update profile — simpan data user + patient.
+     * Update profile — simpan data user + patient/doctor + avatar.
      */
     public function updateProfile(Request $request)
     {
         $user = $request->user();
+        $role = $user->role?->value ?? $user->role;
 
-        $data = $request->validate([
-            'name'          => 'required|string|max:255',
-            'email'         => 'required|email|unique:users,email,' . $user->id,
-            'date_of_birth' => 'nullable|date',
-            'gender'        => 'nullable|in:Laki-laki,Perempuan',
-            'phone'         => 'nullable|string|max:25',
-            'address'       => 'nullable|string|max:500',
-        ]);
+        $rules = [
+            'name'   => 'required|string|max:255',
+            'email'  => 'required|email|unique:users,email,' . $user->id,
+            'avatar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ];
+
+        if ($role === 'patient') {
+            $rules += [
+                'date_of_birth' => 'nullable|date',
+                'gender'        => 'nullable|in:Laki-laki,Perempuan',
+                'phone'         => 'nullable|string|max:25',
+                'address'       => 'nullable|string|max:500',
+            ];
+        } elseif ($role === 'doctor') {
+            $rules += [
+                'specialization' => 'required|string|max:255',
+                'bio'            => 'nullable|string|max:1000',
+                'phone'          => 'nullable|string|max:25',
+            ];
+        }
+
+        $data = $request->validate($rules);
+
+        // Handle avatar upload
+        if ($request->hasFile('avatar')) {
+            // Delete old avatar if exists
+            if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
+                Storage::disk('public')->delete($user->avatar);
+            }
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $user->avatar = $avatarPath;
+        }
 
         // Update user
         $user->name  = $data['name'];
         $user->email = $data['email'];
         $user->save();
 
-        // Upsert patient profile
-        Patient::updateOrCreate(
-            ['user_id' => $user->id],
-            [
-                'date_of_birth' => $data['date_of_birth'] ?? null,
-                'gender'        => $data['gender'] ?? null,
-                'phone'         => $data['phone'] ?? null,
-                'address'       => $data['address'] ?? null,
-            ]
-        );
+        // Upsert role-specific profile
+        if ($role === 'patient') {
+            Patient::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'date_of_birth' => $data['date_of_birth'] ?? null,
+                    'gender'        => $data['gender'] ?? null,
+                    'phone'         => $data['phone'] ?? null,
+                    'address'       => $data['address'] ?? null,
+                ]
+            );
+        } elseif ($role === 'doctor') {
+            Doctor::updateOrCreate(
+                ['user_id' => $user->id],
+                [
+                    'specialization' => $data['specialization'],
+                    'bio'            => $data['bio'] ?? null,
+                    'phone'          => $data['phone'] ?? null,
+                ]
+            );
+        }
 
         return Redirect::back()->with('success', 'Profil berhasil diperbarui!');
     }
@@ -298,7 +347,9 @@ class PageController extends Controller
             ->map(fn($a) => [
                 'id'             => $a->id,
                 'patient'        => $a->patient?->user?->name,
+                'patient_avatar_url' => $a->patient?->user?->avatar_url,
                 'doctor'         => $a->doctor?->user?->name,
+                'doctor_avatar_url'  => $a->doctor?->user?->avatar_url,
                 'specialization' => $a->doctor?->specialization,
                 'date'           => $a->timeSlot?->date,
                 'time'           => $a->timeSlot?->start_time . ' - ' . $a->timeSlot?->end_time,
@@ -318,6 +369,7 @@ class PageController extends Controller
                 'phone'  => $p->phone,
                 'gender' => $p->gender?->value ?? $p->gender,
                 'joined' => $p->created_at?->format('d M Y'),
+                'avatar_url' => $p->user?->avatar_url,
             ]);
 
         // Get full lists for CRUD
@@ -331,6 +383,7 @@ class PageController extends Controller
                 'phone'          => $d->phone,
                 'bio'            => $d->bio,
                 'is_active'      => $d->user?->is_active ?? true,
+                'avatar_url'     => $d->user?->avatar_url,
             ]);
 
         $allPatients = Patient::with('user')
@@ -343,6 +396,7 @@ class PageController extends Controller
                 'gender'        => $p->gender?->value ?? $p->gender,
                 'address'       => $p->address,
                 'phone'         => $p->phone,
+                'avatar_url'    => $p->user?->avatar_url,
             ]);
 
         $allAppointments = Appointment::with(['doctor.user', 'patient.user', 'timeSlot'])
@@ -351,7 +405,9 @@ class PageController extends Controller
             ->map(fn($a) => [
                 'id'             => $a->id,
                 'patient'        => $a->patient?->user?->name,
+                'patient_avatar_url' => $a->patient?->user?->avatar_url,
                 'doctor'         => $a->doctor?->user?->name,
+                'doctor_avatar_url'  => $a->doctor?->user?->avatar_url,
                 'specialization' => $a->doctor?->specialization,
                 'date'           => $a->timeSlot?->date,
                 'time'           => $a->timeSlot?->start_time . ' - ' . $a->timeSlot?->end_time,
@@ -476,6 +532,7 @@ class PageController extends Controller
             'todaySchedule' => $todayAppointments->map(fn($a) => [
                 'id'      => $a->id,
                 'patient' => $a->patient?->user?->name,
+                'patient_avatar_url' => $a->patient?->user?->avatar_url,
                 'time'    => $a->timeSlot?->start_time . ' - ' . $a->timeSlot?->end_time,
                 'status'  => $a->status instanceof \App\Enums\AppointmentStatusEnum ? $a->status->value : $a->status,
                 'notes'   => $a->notes,
@@ -483,6 +540,7 @@ class PageController extends Controller
             'upcomingAppointments' => $upcomingAppointments->map(fn($a) => [
                 'id'      => $a->id,
                 'patient' => $a->patient?->user?->name,
+                'patient_avatar_url' => $a->patient?->user?->avatar_url,
                 'date'    => $a->timeSlot?->date,
                 'time'    => $a->timeSlot?->start_time . ' - ' . $a->timeSlot?->end_time,
                 'status'  => $a->status instanceof \App\Enums\AppointmentStatusEnum ? $a->status->value : $a->status,
@@ -492,25 +550,34 @@ class PageController extends Controller
         ]);
     }
 
-    /**
-     * Patient Dashboard — overview jadwal kesehatan pasien.
-     */
     private function patientDashboard($user)
     {
         $patient = $user?->patient;
+        $today = now()->toDateString();
 
         $upcoming = null;
         if ($patient) {
             $upcomingAppointment = Appointment::with(['doctor.user', 'timeSlot'])
                 ->where('patient_id', $patient->id)
                 ->whereIn('status', ['pending', 'confirmed', 'scheduled'])
-                ->orderBy('time_slot_id')
+                ->whereHas('timeSlot', fn($q) => $q->whereDate('date', '>=', $today))
+                ->orderBy(
+                    TimeSlot::select('date')
+                        ->whereColumn('time_slots.id', 'appointments.time_slot_id')
+                        ->limit(1)
+                )
+                ->orderBy(
+                    TimeSlot::select('start_time')
+                        ->whereColumn('time_slots.id', 'appointments.time_slot_id')
+                        ->limit(1)
+                )
                 ->first();
 
             if ($upcomingAppointment) {
                 $upcoming = [
                     'id'             => $upcomingAppointment->id,
                     'doctor'         => $upcomingAppointment->doctor?->user?->name,
+                    'doctor_avatar_url' => $upcomingAppointment->doctor?->user?->avatar_url,
                     'specialization' => $upcomingAppointment->doctor?->specialization,
                     'date'           => $upcomingAppointment->timeSlot?->date,
                     'time'           => $upcomingAppointment->timeSlot?->start_time . ' - ' . $upcomingAppointment->timeSlot?->end_time,

@@ -93,7 +93,7 @@ export default function DoctorDashboard({ userName, stats, todaySchedule, upcomi
             alert('Diagnosis utama wajib diisi.');
             return;
         }
-        
+
         router.put(`/appointments/${completingAppointmentId}/status`, {
             status: 'completed',
             diagnosis,
@@ -177,200 +177,222 @@ export default function DoctorDashboard({ userName, stats, todaySchedule, upcomi
                     <>
                         {/* Stats Grid */}
                         <div className="stats-grid" style={{ marginBottom: '2rem' }}>
-                    <div className="stat-card">
-                        <div className="stat-icon"><Users size={22} /></div>
-                        <div className="stat-number">{stats.todayPatients}</div>
-                        <div className="stat-label">Pasien Hari Ini</div>
-                    </div>
-                    <div className="stat-card">
-                        <div className="stat-icon"><CalendarCheck size={22} /></div>
-                        <div className="stat-number">{stats.upcomingTotal}</div>
-                        <div className="stat-label">Upcoming</div>
-                    </div>
-                    <div className="stat-card">
-                        <div className="stat-icon"><CheckCircle2 size={22} /></div>
-                        <div className="stat-number">{stats.completedWeek}</div>
-                        <div className="stat-label">Selesai Minggu Ini</div>
-                    </div>
-                    <div className="stat-card">
-                        <div className="stat-icon"><Clock size={22} /></div>
-                        <div className="stat-number">{stats.availableSlots}</div>
-                        <div className="stat-label">Slot Tersedia</div>
-                    </div>
-                </div>
-
-                {/* Dashboard Grid */}
-                <div className="dashboard-grid">
-                    {/* Today's Schedule */}
-                    <div className="dashboard-card dashboard-grid-full">
-                        <div className="dashboard-card-header">
-                            <div>
-                                <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                    <Calendar size={18} style={{ color: 'var(--color-primary)' }} />
-                                    Jadwal Hari Ini
-                                </h3>
-                                <p style={{ marginTop: '0.2rem' }}>Daftar pasien dan jadwal konsultasi Anda hari ini</p>
+                            <div className="stat-card">
+                                <div className="stat-icon"><Users size={22} /></div>
+                                <div className="stat-number">{stats.todayPatients}</div>
+                                <div className="stat-label">Pasien Hari Ini</div>
                             </div>
-                            <span className="eyebrow" style={{ margin: 0, padding: '0.4rem 0.75rem', fontSize: '0.78rem' }}>
-                                {new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-                            </span>
+                            <div className="stat-card">
+                                <div className="stat-icon"><CalendarCheck size={22} /></div>
+                                <div className="stat-number">{stats.upcomingTotal}</div>
+                                <div className="stat-label">Upcoming</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-icon"><CheckCircle2 size={22} /></div>
+                                <div className="stat-number">{stats.completedWeek}</div>
+                                <div className="stat-label">Selesai Minggu Ini</div>
+                            </div>
+                            <div className="stat-card">
+                                <div className="stat-icon"><Clock size={22} /></div>
+                                <div className="stat-number">{stats.availableSlots}</div>
+                                <div className="stat-label">Slot Tersedia</div>
+                            </div>
                         </div>
 
-                        {todaySchedule.length > 0 ? (
-                            <div style={{ overflowX: 'auto' }}>
-                                <table className="schedule-mini-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Pasien</th>
-                                            <th>Waktu</th>
-                                            <th>Status</th>
-                                            <th>Catatan</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {todaySchedule.map((item) => (
-                                            <tr key={item.id}>
-                                                <td>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                                                        <div className="appointment-mini-avatar" style={{ width: '34px', height: '34px', fontSize: '0.78rem' }}>
-                                                            {item.patient?.charAt(0) || '?'}
+                        {/* Dashboard Grid */}
+                        <div className="dashboard-grid">
+                            {/* Today's Schedule */}
+                            <div className="dashboard-card dashboard-grid-full">
+                                <div className="dashboard-card-header">
+                                    <div>
+                                        <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                            <Calendar size={18} style={{ color: 'var(--color-primary)' }} />
+                                            Jadwal Hari Ini
+                                        </h3>
+                                        <p style={{ marginTop: '0.2rem' }}>Daftar pasien dan jadwal konsultasi Anda hari ini</p>
+                                    </div>
+                                    <span className="eyebrow" style={{ margin: 0, padding: '0.4rem 0.75rem', fontSize: '0.78rem' }}>
+                                        {new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                                    </span>
+                                </div>
+
+                                {todaySchedule.length > 0 ? (
+                                    <div style={{ overflowX: 'auto' }}>
+                                        <table className="schedule-mini-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Pasien</th>
+                                                    <th>Waktu</th>
+                                                    <th>Status</th>
+                                                    <th>Catatan</th>
+                                                    <th>Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {todaySchedule.map((item) => (
+                                                    <tr key={item.id}>
+                                                        <td>
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                                                                <div className="appointment-mini-avatar" style={{ width: '34px', height: '34px', fontSize: '0.78rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                                    {item.patient_avatar_url ? (
+                                                                        <img src={item.patient_avatar_url} alt={item.patient} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                                    ) : (
+                                                                        item.patient?.charAt(0) || '?'
+                                                                    )}
+                                                                </div>
+                                                                <span style={{ fontWeight: 600 }}>{item.patient || 'N/A'}</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 600 }}>
+                                                                <Clock size={14} style={{ color: 'var(--color-primary)' }} />
+                                                                {item.time}
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <span className={`status-chip status-${item.status}`} style={{ textTransform: 'capitalize' }}>
+                                                                {getStatusIcon(item.status)}
+                                                                <span style={{ marginLeft: '0.3rem' }}>{item.status}</span>
+                                                            </span>
+                                                        </td>
+                                                        <td style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', maxWidth: '200px' }}>
+                                                            {item.notes ? (
+                                                                <span style={{ fontStyle: 'italic' }}>"{item.notes}"</span>
+                                                            ) : (
+                                                                <span style={{ opacity: 0.5 }}>—</span>
+                                                            )}
+                                                        </td>
+                                                        <td>
+                                                            {['scheduled', 'confirmed', 'pending'].includes(item.status) ? (
+                                                                <div style={{ display: 'flex', gap: '0.4rem' }}>
+                                                                    {item.status === 'confirmed' && (
+                                                                        <button
+                                                                            onClick={() => updateStatus(item.id, 'completed')}
+                                                                            className="btn btn-primary"
+                                                                            style={{ padding: '0.3rem 0.6rem', fontSize: '0.75rem', borderRadius: 'var(--radius-sm)' }}
+                                                                        >
+                                                                            Selesai
+                                                                        </button>
+                                                                    )}
+                                                                    {item.status !== 'confirmed' && (
+                                                                        <span style={{ fontSize: '0.72rem', color: '#b45309', background: 'rgba(251, 191, 36, 0.12)', padding: '0.25rem 0.5rem', borderRadius: 'var(--radius-sm)', fontWeight: 600 }}>
+                                                                            Menunggu Acc Admin
+                                                                        </span>
+                                                                    )}
+                                                                    <button
+                                                                        onClick={() => updateStatus(item.id, 'cancelled')}
+                                                                        className="btn btn-outline"
+                                                                        style={{ padding: '0.3rem 0.6rem', fontSize: '0.75rem', borderRadius: 'var(--radius-sm)', borderColor: '#ef4444', color: '#ef4444' }}
+                                                                    >
+                                                                        Batal
+                                                                    </button>
+                                                                </div>
+                                                            ) : (
+                                                                <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>Tidak ada aksi</span>
+                                                            )}
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                ) : (
+                                    <div style={{
+                                        textAlign: 'center',
+                                        padding: '3rem 1.5rem',
+                                        background: 'var(--color-surface-alt)',
+                                        borderRadius: 'var(--radius-md)',
+                                    }}>
+                                        <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>📭</div>
+                                        <h4 style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--color-text)', marginBottom: '0.35rem' }}>
+                                            Tidak ada jadwal hari ini
+                                        </h4>
+                                        <p style={{ fontSize: '0.88rem', color: 'var(--color-text-muted)' }}>
+                                            Anda tidak memiliki appointment yang terjadwal untuk hari ini.
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Upcoming Appointments */}
+                            <div className="dashboard-card dashboard-grid-full">
+                                <div className="dashboard-card-header">
+                                    <div>
+                                        <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                                            <Clipboard size={18} style={{ color: 'var(--color-primary)' }} />
+                                            Appointment Mendatang
+                                        </h3>
+                                        <p style={{ marginTop: '0.2rem' }}>Appointment yang akan datang berikutnya</p>
+                                    </div>
+                                </div>
+
+                                {upcomingAppointments.length > 0 ? (
+                                    <div className="appointment-mini-list">
+                                        {upcomingAppointments.map((apt) => (
+                                            <div key={apt.id} className="appointment-mini-item" style={{ justifyContent: 'space-between' }}>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+                                                    <div className="appointment-mini-avatar" style={{ overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                        {apt.patient_avatar_url ? (
+                                                            <img src={apt.patient_avatar_url} alt={apt.patient} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                        ) : (
+                                                            apt.patient?.charAt(0) || '?'
+                                                        )}
+                                                    </div>
+                                                    <div className="appointment-mini-info">
+                                                        <div className="appointment-mini-name">{apt.patient || 'N/A'}</div>
+                                                        <div className="appointment-mini-meta">
+                                                            <Calendar size={12} />
+                                                            {formatDate(apt.date)} • {apt.time}
                                                         </div>
-                                                        <span style={{ fontWeight: 600 }}>{item.patient || 'N/A'}</span>
                                                     </div>
-                                                </td>
-                                                <td>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 600 }}>
-                                                        <Clock size={14} style={{ color: 'var(--color-primary)' }} />
-                                                        {item.time}
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <span className={`status-chip status-${item.status}`} style={{ textTransform: 'capitalize' }}>
-                                                        {getStatusIcon(item.status)}
-                                                        <span style={{ marginLeft: '0.3rem' }}>{item.status}</span>
+                                                </div>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                                                    <span className={`status-chip status-${apt.status}`} style={{ textTransform: 'capitalize', fontSize: '0.75rem' }}>
+                                                        {getStatusIcon(apt.status)}
+                                                        <span style={{ marginLeft: '0.25rem' }}>{apt.status}</span>
                                                     </span>
-                                                </td>
-                                                <td style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', maxWidth: '200px' }}>
-                                                    {item.notes ? (
-                                                        <span style={{ fontStyle: 'italic' }}>"{item.notes}"</span>
-                                                    ) : (
-                                                        <span style={{ opacity: 0.5 }}>—</span>
-                                                    )}
-                                                </td>
-                                                <td>
-                                                    {['scheduled', 'confirmed', 'pending'].includes(item.status) ? (
-                                                        <div style={{ display: 'flex', gap: '0.4rem' }}>
+                                                    {['scheduled', 'confirmed', 'pending'].includes(apt.status) && (
+                                                        <div style={{ display: 'flex', gap: '0.3rem' }}>
+                                                            {apt.status === 'confirmed' && (
+                                                                <button
+                                                                    onClick={() => updateStatus(apt.id, 'completed')}
+                                                                    className="btn btn-primary"
+                                                                    style={{ padding: '0.25rem 0.5rem', fontSize: '0.7rem', borderRadius: 'var(--radius-sm)' }}
+                                                                >
+                                                                    Selesai
+                                                                </button>
+                                                            )}
+                                                            {apt.status !== 'confirmed' && (
+                                                                <span style={{ fontSize: '0.68rem', color: '#b45309', background: 'rgba(251, 191, 36, 0.12)', padding: '0.2rem 0.45rem', borderRadius: 'var(--radius-sm)', fontWeight: 600 }}>
+                                                                    Menunggu Acc
+                                                                </span>
+                                                            )}
                                                             <button
-                                                                onClick={() => updateStatus(item.id, 'completed')}
-                                                                className="btn btn-primary"
-                                                                style={{ padding: '0.3rem 0.6rem', fontSize: '0.75rem', borderRadius: 'var(--radius-sm)' }}
-                                                            >
-                                                                Selesai
-                                                            </button>
-                                                            <button
-                                                                onClick={() => updateStatus(item.id, 'cancelled')}
+                                                                onClick={() => updateStatus(apt.id, 'cancelled')}
                                                                 className="btn btn-outline"
-                                                                style={{ padding: '0.3rem 0.6rem', fontSize: '0.75rem', borderRadius: 'var(--radius-sm)', borderColor: '#ef4444', color: '#ef4444' }}
+                                                                style={{ padding: '0.25rem 0.5rem', fontSize: '0.7rem', borderRadius: 'var(--radius-sm)', borderColor: '#ef4444', color: '#ef4444' }}
                                                             >
                                                                 Batal
                                                             </button>
                                                         </div>
-                                                    ) : (
-                                                        <span style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>Tidak ada aksi</span>
                                                     )}
-                                                </td>
-                                            </tr>
+                                                </div>
+                                            </div>
                                         ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        ) : (
-                            <div style={{
-                                textAlign: 'center',
-                                padding: '3rem 1.5rem',
-                                background: 'var(--color-surface-alt)',
-                                borderRadius: 'var(--radius-md)',
-                            }}>
-                                <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>📭</div>
-                                <h4 style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--color-text)', marginBottom: '0.35rem' }}>
-                                    Tidak ada jadwal hari ini
-                                </h4>
-                                <p style={{ fontSize: '0.88rem', color: 'var(--color-text-muted)' }}>
-                                    Anda tidak memiliki appointment yang terjadwal untuk hari ini.
-                                </p>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Upcoming Appointments */}
-                    <div className="dashboard-card dashboard-grid-full">
-                        <div className="dashboard-card-header">
-                            <div>
-                                <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                    <Clipboard size={18} style={{ color: 'var(--color-primary)' }} />
-                                    Appointment Mendatang
-                                </h3>
-                                <p style={{ marginTop: '0.2rem' }}>Appointment yang akan datang berikutnya</p>
+                                    </div>
+                                ) : (
+                                    <div style={{
+                                        textAlign: 'center',
+                                        padding: '2.5rem 1.5rem',
+                                        background: 'var(--color-surface-alt)',
+                                        borderRadius: 'var(--radius-md)',
+                                    }}>
+                                        <AlertCircle size={32} style={{ opacity: 0.3, margin: '0 auto 0.75rem', color: 'var(--color-primary)' }} />
+                                        <p style={{ color: 'var(--color-text-muted)' }}>Tidak ada appointment mendatang.</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
-
-                        {upcomingAppointments.length > 0 ? (
-                            <div className="appointment-mini-list">
-                                {upcomingAppointments.map((apt) => (
-                                    <div key={apt.id} className="appointment-mini-item" style={{ justifyContent: 'space-between' }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
-                                            <div className="appointment-mini-avatar">
-                                                {apt.patient?.charAt(0) || '?'}
-                                            </div>
-                                            <div className="appointment-mini-info">
-                                                <div className="appointment-mini-name">{apt.patient || 'N/A'}</div>
-                                                <div className="appointment-mini-meta">
-                                                    <Calendar size={12} />
-                                                    {formatDate(apt.date)} • {apt.time}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                            <span className={`status-chip status-${apt.status}`} style={{ textTransform: 'capitalize', fontSize: '0.75rem' }}>
-                                                {getStatusIcon(apt.status)}
-                                                <span style={{ marginLeft: '0.25rem' }}>{apt.status}</span>
-                                            </span>
-                                            {['scheduled', 'confirmed', 'pending'].includes(apt.status) && (
-                                                <div style={{ display: 'flex', gap: '0.3rem' }}>
-                                                    <button
-                                                        onClick={() => updateStatus(apt.id, 'completed')}
-                                                        className="btn btn-primary"
-                                                        style={{ padding: '0.25rem 0.5rem', fontSize: '0.7rem', borderRadius: 'var(--radius-sm)' }}
-                                                    >
-                                                        Selesai
-                                                    </button>
-                                                    <button
-                                                        onClick={() => updateStatus(apt.id, 'cancelled')}
-                                                        className="btn btn-outline"
-                                                        style={{ padding: '0.25rem 0.5rem', fontSize: '0.7rem', borderRadius: 'var(--radius-sm)', borderColor: '#ef4444', color: '#ef4444' }}
-                                                    >
-                                                        Batal
-                                                    </button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div style={{
-                                textAlign: 'center',
-                                padding: '2.5rem 1.5rem',
-                                background: 'var(--color-surface-alt)',
-                                borderRadius: 'var(--radius-md)',
-                            }}>
-                                <AlertCircle size={32} style={{ opacity: 0.3, margin: '0 auto 0.75rem', color: 'var(--color-primary)' }} />
-                                <p style={{ color: 'var(--color-text-muted)' }}>Tidak ada appointment mendatang.</p>
-                            </div>
-                        )}
-                    </div>
-                </div>
                     </>
                 )}
 
@@ -396,7 +418,7 @@ export default function DoctorDashboard({ userName, stats, todaySchedule, upcomi
                                     <p style={{ color: 'var(--color-text-muted)', fontSize: '0.88rem', marginBottom: '1.25rem' }}>
                                         Masukkan rekam medis pasien sebelum menyelesaikan appointment ini.
                                     </p>
-                                    
+
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                                         <div className="form-group">
                                             <label className="form-label" style={{ fontWeight: 600 }}>Diagnosis Utama <span style={{ color: '#ef4444' }}>*</span></label>
@@ -409,7 +431,7 @@ export default function DoctorDashboard({ userName, stats, todaySchedule, upcomi
                                                 required
                                             />
                                         </div>
-                                        
+
                                         <div className="form-group">
                                             <label className="form-label" style={{ fontWeight: 600 }}>Tindakan / Pengobatan (Treatment)</label>
                                             <textarea
@@ -420,7 +442,7 @@ export default function DoctorDashboard({ userName, stats, todaySchedule, upcomi
                                                 onChange={(e) => setTreatment(e.target.value)}
                                             />
                                         </div>
-                                        
+
                                         <div className="form-group">
                                             <label className="form-label" style={{ fontWeight: 600 }}>Resep Obat (Pisahkan dengan koma)</label>
                                             <input
@@ -432,7 +454,7 @@ export default function DoctorDashboard({ userName, stats, todaySchedule, upcomi
                                                 onChange={(e) => setMedications(e.target.value)}
                                             />
                                         </div>
-                                        
+
                                         <div className="form-group">
                                             <label className="form-label" style={{ fontWeight: 600 }}>Catatan Tambahan</label>
                                             <textarea

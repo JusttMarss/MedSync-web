@@ -75,7 +75,7 @@ function DoctorCard({ doctor }: DoctorCardProps) {
             {/* Header */}
             <div className="doctor-card-header">
                 <div className="doctor-avatar">
-                    {getInitials(doctor.name ?? '')}
+                   {doctor.avatar_url ? <img src={doctor.avatar_url} alt={doctor.name} /> : getInitials(doctor.name ?? '')}
                 </div>
                 <div className="doctor-info">
                     <h3>{doctor.name}</h3>
