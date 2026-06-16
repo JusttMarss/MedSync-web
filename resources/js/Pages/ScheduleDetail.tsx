@@ -247,7 +247,7 @@ export default function ScheduleDetail({ doctor, timeSlots }: ScheduleDetailProp
                                 {/* Date Header */}
                                 <div style={{
                                     display: 'flex',
-                                    alignItems: 'center',
+                                    alignItems: 'start',
                                     gap: '0.5rem',
                                     marginBottom: '1rem',
                                     paddingBottom: '0.75rem',
@@ -278,6 +278,7 @@ export default function ScheduleDetail({ doctor, timeSlots }: ScheduleDetailProp
                                     {grouped[date].map((slot) => (
                                         <div key={slot.id} className="time-slot-row" style={{
                                             opacity: slot.is_booked ? 0.6 : 1,
+                                            justifyContent: 'flex-end',
                                         }}>
                                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-text)' }}>
                                                 <IconClock />
