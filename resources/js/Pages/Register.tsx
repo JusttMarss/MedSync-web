@@ -5,9 +5,9 @@ import MainLayout from '../Layouts/MainLayout';
 import type { SharedProps } from '../types';
 
 const avatarData = [
-    { label: 'A', anim: 'floatA', delay: '0s' },
-    { label: 'B', anim: 'floatB', delay: '0.4s' },
-    { label: 'C', anim: 'floatC', delay: '0.8s' },
+    { label: '👤', anim: 'floatA', delay: '0s' },
+    { label: '👤', anim: 'floatB', delay: '0.4s' },
+    { label: '👤', anim: 'floatC', delay: '0.8s' },
 ];
 
 export default function Register() {
@@ -77,14 +77,14 @@ export default function Register() {
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem' }}>
                                 <HeartPulse size={18} color="rgba(255,255,255,0.65)" strokeWidth={1.5} />
                                 <span style={{ fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.09em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)' }}>
-                                    Create Account
+                                    Buat Akun Baru
                                 </span>
                             </div>
                             <h1 style={{ fontSize: '1.6rem', fontWeight: 700, color: '#fff', lineHeight: 1.3, marginBottom: '1rem' }}>
-                                Your health journey,<br />modernized and secure.
+                                Perjalanan Kesehatan Anda,<br />Lebih Modern dan Aman.
                             </h1>
                             <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.65, marginBottom: '2rem' }}>
-                                Join MedSync Clinic to manage your appointments and medical records in one secure place.
+                                Bergabunglah dengan MedSync Clinic untuk mengelola janji temu dan mengakses rekam medis Anda dalam satu platform yang aman dan mudah digunakan.
                             </p>
 
                             {/* feature pills */}
@@ -127,7 +127,7 @@ export default function Register() {
                                 ))}
                             </div>
                             <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.55)', animation: 'fadePulse 3s ease-in-out infinite' }}>
-                                Trusted by 10,000+ patients
+                                Dipercaya oleh 10.000+ Pasien
                             </span>
                         </div>
                     </div>
@@ -159,14 +159,14 @@ export default function Register() {
                             {/* Name + Email */}
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                                 <div>
-                                    <label style={labelStyle}>Full Name</label>
+                                    <label style={labelStyle}>Nama Lengkap</label>
                                     <input type="text" className="filter-input" placeholder="John Doe"
                                         value={form.data.name}
                                         onChange={(e) => form.setData('name', e.target.value)}
                                         required style={inputStyle} />
                                 </div>
                                 <div>
-                                    <label style={labelStyle}>Email Address</label>
+                                    <label style={labelStyle}>Alamat Email</label>
                                     <input type="email" className="filter-input" placeholder="you@example.com"
                                         value={form.data.email}
                                         onChange={(e) => form.setData('email', e.target.value)}
@@ -177,7 +177,7 @@ export default function Register() {
                             {/* DOB + Gender */}
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                                 <div>
-                                    <label style={labelStyle}>Date of Birth</label>
+                                    <label style={labelStyle}>Tanggal Lahir</label>
                                     <input type="date" className="filter-input"
                                         value={form.data.date_of_birth}
                                         onChange={(e) => form.setData('date_of_birth', e.target.value)}
@@ -189,7 +189,7 @@ export default function Register() {
                                         value={form.data.gender}
                                         onChange={(e) => form.setData('gender', e.target.value)}
                                         style={inputStyle}>
-                                        <option value="">Select</option>
+                                        <option value="">Pilih Jenis Kelamin</option>
                                         <option value="Laki-laki">Laki-laki</option>
                                         <option value="Perempuan">Perempuan</option>
                                     </select>
@@ -198,7 +198,7 @@ export default function Register() {
 
                             {/* Phone */}
                             <div>
-                                <label style={labelStyle}>Phone Number</label>
+                                <label style={labelStyle}>Nomor Telepon</label>
                                 <input type="tel" className="filter-input" placeholder="08xxxxxxxxxx"
                                     value={form.data.phone}
                                     onChange={(e) => form.setData('phone', e.target.value)}
@@ -207,7 +207,7 @@ export default function Register() {
 
                             {/* Address */}
                             <div>
-                                <label style={labelStyle}>Address</label>
+                                <label style={labelStyle}>Alamat</label>
                                 <textarea className="filter-input" rows={2} placeholder="Jl. Contoh No. 1, Kota"
                                     value={form.data.address}
                                     onChange={(e) => form.setData('address', e.target.value)}
@@ -217,7 +217,7 @@ export default function Register() {
                             {/* Password + Confirm */}
                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
                                 <div>
-                                    <label style={labelStyle}>Password</label>
+                                    <label style={labelStyle}>Kata Sandi</label>
                                     <div style={{ position: 'relative' }}>
                                         <input type={showPassword ? 'text' : 'password'}
                                             className="filter-input" placeholder="••••••••"
@@ -232,7 +232,7 @@ export default function Register() {
                                     </div>
                                 </div>
                                 <div>
-                                    <label style={labelStyle}>Confirm Password</label>
+                                    <label style={labelStyle}>Konfirmasi Kata Sandi</label>
                                     <div style={{ position: 'relative' }}>
                                         <input type={showConfirm ? 'text' : 'password'}
                                             className="filter-input" placeholder="••••••••"
@@ -263,7 +263,7 @@ export default function Register() {
 
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: '1.25rem 0' }}>
                             <div style={{ flex: 1, height: '0.5px', background: 'var(--color-border)' }} />
-                            <span style={{ fontSize: '0.78rem', color: 'var(--color-text-muted)' }}>already have an account?</span>
+                            <span style={{ fontSize: '0.78rem', color: 'var(--color-text-muted)' }}>sudah memiliki akun?</span>
                             <div style={{ flex: 1, height: '0.5px', background: 'var(--color-border)' }} />
                         </div>
 
@@ -275,7 +275,7 @@ export default function Register() {
                             textDecoration: 'none', background: 'transparent',
                             transition: 'border-color 0.2s',
                         }}>
-                            Sign In
+                            Masuk Kembali
                         </Link>
                     </div>
                 </div>

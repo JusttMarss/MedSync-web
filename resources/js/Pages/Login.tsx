@@ -53,14 +53,14 @@ export default function Login() {
                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '2rem' }}>
                                 <HeartPulse size={18} color="rgba(255,255,255,0.65)" strokeWidth={1.5} />
                                 <span style={{ fontSize: '0.75rem', fontWeight: 600, letterSpacing: '0.09em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.55)' }}>
-                                    Secure access
+                                    Akses Terjamin
                                 </span>
                             </div>
                             <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: '#fff', lineHeight: 1.3, marginBottom: '1rem' }}>
                                 Welcome back<br />to MedSync Clinic
                             </h1>
                             <p style={{ fontSize: '0.875rem', color: 'rgba(255,255,255,0.6)', lineHeight: 1.65 }}>
-                                Sign in to manage appointments, view records, and stay connected with your care team.
+                                Masuk untuk mengelola janji temu, melihat rekam medis, dan tetap terhubung dengan tim layanan kesehatan Anda.
                             </p>
                         </div>
 
@@ -68,9 +68,9 @@ export default function Login() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', position: 'relative' }}>
                             <div style={{ display: 'flex' }}>
                                 {[
-                                    { label: 'A', anim: 'floatA', delay: '0s' },
-                                    { label: 'B', anim: 'floatB', delay: '0.4s' },
-                                    { label: 'C', anim: 'floatC', delay: '0.8s' },
+                                    { label: '👤', anim: 'floatA', delay: '0s' },
+                                    { label: '👤', anim: 'floatB', delay: '0.4s' },
+                                    { label: '👤', anim: 'floatC', delay: '0.8s' },
                                 ].map(({ label, anim, delay }, i) => (
                                     <div
                                         key={i}
@@ -94,7 +94,7 @@ export default function Login() {
                                 color: 'rgba(255,255,255,0.55)',
                                 animation: 'fadePulse 3s ease-in-out infinite',
                             }}>
-                                Trusted by 10,000+ patients
+                                Dipercaya oleh 10.000+ Pasien.
                             </span>
                         </div>
                     </div>
@@ -109,10 +109,10 @@ export default function Login() {
                         justifyContent: 'center',
                     }}>
                         <h2 style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--color-text)', marginBottom: '0.3rem' }}>
-                            Sign in
+                            Masuk
                         </h2>
                         <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)', marginBottom: '1.75rem' }}>
-                            Enter your credentials to continue
+                            Masukkan informasi akun Anda untuk melanjutkan
                         </p>
 
                         {props.flash?.error && (
@@ -125,7 +125,7 @@ export default function Login() {
                             {/* Email */}
                             <div>
                                 <label htmlFor="email" style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text-muted)', marginBottom: '0.4rem' }}>
-                                    Email address
+                                    Alamat Email
                                 </label>
                                 <input
                                     id="email"
@@ -144,7 +144,7 @@ export default function Login() {
                             {/* Password */}
                             <div>
                                 <label htmlFor="password" style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text-muted)', marginBottom: '0.4rem' }}>
-                                    Password
+                                    Kata Sandi
                                 </label>
                                 <div style={{ position: 'relative' }}>
                                     <input
@@ -187,10 +187,10 @@ export default function Login() {
                                         onChange={(e) => form.setData('remember', e.target.checked)}
                                         style={{ accentColor: 'var(--color-primary)', width: '14px', height: '14px' }}
                                     />
-                                    Remember me
+                                    Ingat Saya
                                 </label>
                                 <a href="#" style={{ fontSize: '0.85rem', color: 'var(--color-primary)', textDecoration: 'none', fontWeight: 500 }}>
-                                    Forgot password?
+                                    Lupa Kata Sandi?
                                 </a>
                             </div>
 
@@ -213,14 +213,14 @@ export default function Login() {
 
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: '1.5rem 0' }}>
                             <div style={{ flex: 1, height: '0.5px', background: 'var(--color-border)' }} />
-                            <span style={{ fontSize: '0.78rem', color: 'var(--color-text-muted)' }}>or continue with</span>
+                            <span style={{ fontSize: '0.78rem', color: 'var(--color-text-muted)' }}>atau lanjutkan dengan</span>
                             <div style={{ flex: 1, height: '0.5px', background: 'var(--color-border)' }} />
                         </div>
 
                         <p style={{ textAlign: 'center', fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
-                            Don't have an account?{' '}
+                            Belum Memiliki Akun?{' '}
                             <Link href="/register" style={{ color: 'var(--color-primary)', fontWeight: 600, textDecoration: 'none' }}>
-                                Sign up
+                                Daftar Sekarang
                             </Link>
                         </p>
                     </div>
