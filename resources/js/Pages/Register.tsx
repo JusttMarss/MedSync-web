@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useEffect } from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { Eye, EyeOff, HeartPulse, UserPlus, ShieldCheck, Calendar, Phone } from 'lucide-react';
 import MainLayout from '../Layouts/MainLayout';
@@ -24,6 +24,18 @@ export default function Register() {
     });
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+    const [isTablet, setIsTablet] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 1024);
+            setIsTablet(window.innerWidth < 768);
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     function submit(e: FormEvent) {
         e.preventDefault();
@@ -44,11 +56,12 @@ export default function Register() {
                 display: 'flex',
                 alignItems: 'flex-start',
                 justifyContent: 'center',
-                padding: '6rem 2rem 1.5rem',
+                padding: 'clamp(2rem, 4vw, 6rem) clamp(1rem, 3vw, 2rem) clamp(1rem, 3vw, 1.5rem)',
                 flex: 1,
             }}>
                 <div style={{
                     display: 'flex',
+                    flexDirection: isMobile ? 'column' : 'row',
                     width: '100%', 
                     maxWidth: '1000px',
                     borderRadius: '20px',
@@ -62,8 +75,8 @@ export default function Register() {
                     <div style={{
                         flex: 1,
                         background: 'linear-gradient(160deg, var(--color-primary) 0%, var(--color-secondary) 100%)',
-                        padding: '3rem 2.5rem', 
-                        display: 'flex',
+                        padding: 'clamp(2rem, 3vw, 3rem) clamp(1.5rem, 3vw, 2.5rem)', 
+                        display: isMobile ? 'none' : 'flex',
                         flexDirection: 'column', 
                         justifyContent: 'space-between',
                         position: 'relative', 
@@ -136,15 +149,15 @@ export default function Register() {
                     <div style={{
                         flex: 1.2, 
                         background: 'var(--color-surface)',
-                        padding: '2.5rem 2.75rem',
+                        padding: 'clamp(2rem, 3vw, 2.5rem) clamp(1.5rem, 3vw, 2.75rem)',
                         display: 'flex', 
                         flexDirection: 'column',
                         justifyContent: 'flex-start',
                     }}>
-                        <h2 style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--color-text)', marginBottom: '0.3rem' }}>
+                        <h2 style={{ fontSize: 'clamp(1.15rem, 3vw, 1.4rem)', fontWeight: 700, color: 'var(--color-text)', marginBottom: '0.3rem' }}>
                             Create Account
                         </h2>
-                        <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)', marginBottom: '1.5rem' }}>
+                        <p style={{ fontSize: 'clamp(0.8rem, 2vw, 0.875rem)', color: 'var(--color-text-muted)', marginBottom: 'clamp(1rem, 2vw, 1.5rem)' }}>
                             Isi data di bawah untuk membuat akun baru
                         </p>
 
@@ -157,7 +170,7 @@ export default function Register() {
                         <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
 
                             {/* Name + Email */}
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: isTablet ? '1fr' : '1fr 1fr', gap: 'clamp(0.5rem, 2vw, 0.75rem)' }}>
                                 <div>
                                     <label style={labelStyle}>Nama Lengkap</label>
                                     <input type="text" className="filter-input" placeholder="John Doe"
@@ -175,7 +188,7 @@ export default function Register() {
                             </div>
 
                             {/* DOB + Gender */}
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: isTablet ? '1fr' : '1fr 1fr', gap: 'clamp(0.5rem, 2vw, 0.75rem)' }}>
                                 <div>
                                     <label style={labelStyle}>Tanggal Lahir</label>
                                     <input type="date" className="filter-input"
@@ -215,7 +228,7 @@ export default function Register() {
                             </div>
 
                             {/* Password + Confirm */}
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: isTablet ? '1fr' : '1fr 1fr', gap: 'clamp(0.5rem, 2vw, 0.75rem)' }}>
                                 <div>
                                     <label style={labelStyle}>Kata Sandi</label>
                                     <div style={{ position: 'relative' }}>

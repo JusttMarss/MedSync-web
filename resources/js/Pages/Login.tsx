@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useEffect } from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { Eye, EyeOff, HeartPulse, LogIn } from 'lucide-react';
 import MainLayout from '../Layouts/MainLayout';
@@ -8,6 +8,14 @@ export default function Login() {
     const { props } = usePage<SharedProps>();
     const form = useForm({ email: '', password: '', remember: false });
     const [showPassword, setShowPassword] = useState(false);
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 1024);
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     function submit(e: FormEvent) {
         e.preventDefault();
@@ -22,11 +30,12 @@ export default function Login() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '6rem 2rem 1.5rem',
+                padding: 'clamp(2rem, 4vw, 6rem) clamp(1rem, 3vw, 2rem) clamp(1rem, 3vw, 1.5rem)',
                 flex: 1,
             }}>
                 <div style={{
                     display: 'flex',
+                    flexDirection: isMobile ? 'column' : 'row',
                     width: '100%',
                     maxWidth: '1000px',
                     borderRadius: '20px',
@@ -38,8 +47,8 @@ export default function Login() {
                     <div style={{
                         flex: 1,
                         background: 'linear-gradient(160deg, var(--color-primary) 0%, var(--color-secondary) 100%)',
-                        padding: '3rem 2.5rem',
-                        display: 'flex',
+                        padding: 'clamp(2rem, 3vw, 3rem) clamp(1.5rem, 3vw, 2.5rem)',
+                        display: isMobile ? 'none' : 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-between',
                         position: 'relative',
@@ -103,15 +112,15 @@ export default function Login() {
                     <div style={{
                         flex: 1.2,
                         background: 'var(--color-surface)',
-                        padding: '2.5rem 2.75rem',
+                        padding: 'clamp(2rem, 3vw, 2.5rem) clamp(1.5rem, 3vw, 2.75rem)',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'center',
                     }}>
-                        <h2 style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--color-text)', marginBottom: '0.3rem' }}>
+                        <h2 style={{ fontSize: 'clamp(1.15rem, 3vw, 1.4rem)', fontWeight: 700, color: 'var(--color-text)', marginBottom: '0.3rem' }}>
                             Masuk
                         </h2>
-                        <p style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)', marginBottom: '1.75rem' }}>
+                        <p style={{ fontSize: 'clamp(0.8rem, 2vw, 0.875rem)', color: 'var(--color-text-muted)', marginBottom: 'clamp(1rem, 2vw, 1.75rem)' }}>
                             Masukkan informasi akun Anda untuk melanjutkan
                         </p>
 
