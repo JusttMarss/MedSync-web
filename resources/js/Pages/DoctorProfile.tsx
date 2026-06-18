@@ -21,7 +21,7 @@ interface DoctorDetail {
     avatar_url?: string;
 }
 
-interface ScheduleDetailProps {
+interface DoctorProfileProps {
     doctor: DoctorDetail;
     timeSlots: TimeSlot[];
 }
@@ -126,7 +126,7 @@ function groupByDate(slots: TimeSlot[]): Record<string, TimeSlot[]> {
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
-export default function ScheduleDetail({ doctor, timeSlots }: ScheduleDetailProps) {
+export default function DoctorProfile({ doctor, timeSlots }: DoctorProfileProps) {
     const grouped = groupByDate(timeSlots);
     const sortedDates = Object.keys(grouped).sort();
 
@@ -136,18 +136,18 @@ export default function ScheduleDetail({ doctor, timeSlots }: ScheduleDetailProp
 
     return (
         <MainLayout>
-            <Head title={`Jadwal ${doctor.name}`} />
+            <Head title={`Profil ${doctor.name}`} />
 
             <section className="section page-enter">
 
                 {/* ── Back Button ── */}
                 <button
                     className="btn btn-ghost btn-sm"
-                    onClick={() => router.visit('/schedule')}
+                    onClick={() => router.visit('/doctors')}
                     style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '1.5rem', paddingLeft: 0 }}
                 >
                     <IconArrowLeft />
-                    Kembali ke Jadwal
+                    Kembali ke Daftar Dokter
                 </button>
 
                 {/* ── Doctor Profile Card ── */}
@@ -233,7 +233,7 @@ export default function ScheduleDetail({ doctor, timeSlots }: ScheduleDetailProp
                     <div style={{ marginTop: '1.25rem', paddingTop: '1.25rem', borderTop: '1px solid var(--color-border)' }}>
                         <button
                             className="btn btn-primary btn-sm"
-                            onClick={() => router.visit(`/appointments`)}
+                            onClick={() => router.visit(`/login`)}
                         >
                             Buat Janji dengan Dokter Ini
                         </button>

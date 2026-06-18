@@ -124,11 +124,14 @@ export default function Login() {
                         <form onSubmit={submit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                             {/* Email */}
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text-muted)', marginBottom: '0.4rem' }}>
+                                <label htmlFor="email" style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text-muted)', marginBottom: '0.4rem' }}>
                                     Email address
                                 </label>
                                 <input
+                                    id="email"
+                                    name="email"
                                     type="email"
+                                    autoComplete="email"
                                     className="filter-input"
                                     placeholder="you@example.com"
                                     value={form.data.email}
@@ -140,12 +143,15 @@ export default function Login() {
 
                             {/* Password */}
                             <div>
-                                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text-muted)', marginBottom: '0.4rem' }}>
+                                <label htmlFor="password" style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--color-text-muted)', marginBottom: '0.4rem' }}>
                                     Password
                                 </label>
                                 <div style={{ position: 'relative' }}>
                                     <input
+                                        id="password"
+                                        name="password"
                                         type={showPassword ? 'text' : 'password'}
+                                        autoComplete="current-password"
                                         className="filter-input"
                                         placeholder="••••••••"
                                         value={form.data.password}
@@ -172,8 +178,10 @@ export default function Login() {
 
                             {/* Remember + forgot */}
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', color: 'var(--color-text-muted)', cursor: 'pointer' }}>
+                                <label htmlFor="remember" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', color: 'var(--color-text-muted)', cursor: 'pointer' }}>
                                     <input
+                                        id="remember"
+                                        name="remember"
                                         type="checkbox"
                                         checked={form.data.remember}
                                         onChange={(e) => form.setData('remember', e.target.checked)}
