@@ -16,8 +16,12 @@ interface NavbarProps {
 
 export default function Navbar({ navLinks, authLinks }: NavbarProps) {
     const { url, props } = usePage<SharedProps>();
+<<<<<<< HEAD
     const appName = props.appName || 'MedSync Pro';
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+=======
+    const appName = 'MedSync Pro';
+>>>>>>> 874ff4c58364a0f77271d53c2bbc9241887e15db
     
     const { scrollY } = useScroll();
     const navBackground = useTransform(
