@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/doctors', [PageController::class, 'doctors'])->name('doctors');
+Route::get('/doctors/{id}', [PageController::class, 'doctorProfile'])->name('doctor.profile');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [WebAuthController::class, 'showLogin'])->name('login');

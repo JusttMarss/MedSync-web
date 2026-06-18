@@ -99,6 +99,38 @@ class PageController extends Controller
     }
 
     /**
+     * Doctor Profile — detail dokter beserta jadwal.
+     */
+    public function doctorProfile($doctorId)
+    {
+        $doctor = Doctor::with(['user', 'timeSlots' => fn($q) => $q->whereDate('date', '>=', today())->orderBy('date')->orderBy('start_time')])
+            ->findOrFail($doctorId);
+
+        $doctorData = [
+            'id'             => $doctor->id,
+            'name'           => $doctor->user?->name,
+            'specialization' => $doctor->specialization,
+            'email'          => $doctor->user?->email,
+            'phone'          => $doctor->phone,
+            'bio'            => $doctor->bio,
+            'avatar_url'     => $doctor->user?->avatar_url,
+        ];
+
+        $timeSlots = $doctor->timeSlots->map(fn($t) => [
+            'id'         => $t->id,
+            'date'       => $t->date,
+            'start_time' => $t->start_time,
+            'end_time'   => $t->end_time,
+            'is_booked'  => (bool) $t->is_booked,
+        ]);
+
+        return Inertia::render('DoctorProfile', [
+            'doctor'    => $doctorData,
+            'timeSlots' => $timeSlots,
+        ]);
+    }
+
+    /**
      * Appointments page — daftar appointment dan form pemesanan sederhana.
      */
     public function appointments(Request $request)
