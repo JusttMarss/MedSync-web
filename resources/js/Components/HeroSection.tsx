@@ -18,9 +18,9 @@ const imageVariants = {
 };
 
 const avatarData = [
-    { label: 'A', anim: 'floatA', delay: '0s' },
-    { label: 'B', anim: 'floatB', delay: '0.4s' },
-    { label: 'C', anim: 'floatC', delay: '0.8s' },
+    { label: '👨', anim: 'floatA', delay: '0s' },
+    { label: '👩', anim: 'floatB', delay: '0.4s' },
+    { label: '👨', anim: 'floatC', delay: '0.8s' },
 ];
 
 export default function HeroSection() {
@@ -49,7 +49,7 @@ export default function HeroSection() {
                                 border: '1px solid rgba(15,118,159,0.18)',
                             }}
                         >
-                            <ShieldCheck size={14} /> Top Rated Clinic 2024
+                            <ShieldCheck size={14} /> Klinik Pilihan Terbaik 2024
                         </motion.span>
 
                         <motion.h1
@@ -61,10 +61,10 @@ export default function HeroSection() {
                                 marginBottom: '1.25rem',
                             }}
                         >
-                            Your Health,{' '}
+                            Kesehatan Anda,{' '}
                             <br />
                             <span style={{ background: 'var(--gradient-button)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                                Simplified.
+                                Lebih Mudah.
                             </span>
                         </motion.h1>
 
@@ -72,15 +72,15 @@ export default function HeroSection() {
                             variants={itemVariants}
                             style={{ fontSize: '1.05rem', color: 'var(--color-text-muted)', maxWidth: '460px', marginBottom: '2rem', lineHeight: 1.65 }}
                         >
-                            Experience modern healthcare with seamless appointment booking, expert specialists, and instant access to your medical records all in one place.
+                            Nikmati layanan kesehatan modern dengan pemesanan janji temu yang mudah, dokter spesialis terpercaya, serta akses cepat ke rekam medis Anda dalam satu platform.
                         </motion.p>
 
                         <motion.div variants={itemVariants} style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
                             <Link href="/appointments" className="btn btn-primary" style={{ padding: '0.875rem 1.75rem', fontSize: '1rem', boxShadow: 'var(--shadow-glow)' }}>
-                                Book Appointment
+                                Buat Janji Temu
                             </Link>
                             <Link href="/doctors" className="btn btn-outline" style={{ padding: '0.875rem 1.75rem', fontSize: '1rem', background: 'var(--color-surface-solid)', border: '1px solid var(--color-border)' }}>
-                                Find a Doctor
+                                Cari Dokter
                             </Link>
                         </motion.div>
 
@@ -111,7 +111,7 @@ export default function HeroSection() {
                                 fontSize: '0.875rem', color: 'var(--color-text-muted)', fontWeight: 500,
                                 animation: 'fadePulse 3s ease-in-out infinite',
                             }}>
-                                Trusted by 10,000+ patients
+                                Dipercaya oleh 10.000+ Pasien
                             </span>
                         </motion.div>
                     </motion.div>
@@ -161,10 +161,10 @@ export default function HeroSection() {
                                 </div>
                                 <div>
                                     <div style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
-                                        Next Available
+                                        Jadwal Terdekat
                                     </div>
                                     <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--color-text)', marginTop: '2px' }}>
-                                        Today, 2:30 PM
+                                        Hari Ini, 14.30
                                     </div>
                                 </div>
                             </motion.div>

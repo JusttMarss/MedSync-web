@@ -45,8 +45,8 @@ export default function DoctorListSection({ doctors }: DoctorListSectionProps) {
                 viewport={{ once: true, margin: "-50px" }}
                 style={{ textAlign: 'center', marginBottom: '3rem' }}
             >
-                <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--color-primary)' }}>Find Your Doctor</h2>
-                <p style={{ maxWidth: '600px', margin: '1rem auto 0', color: 'var(--color-text-muted)' }}>Browse our directory of specialized medical professionals. Filter by specialization and availability to find the right care for your needs today.</p>
+                <h2 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--color-primary)' }}>Temukan Dokter yang Tepat</h2>
+                <p style={{ maxWidth: '600px', margin: '1rem auto 0', color: 'var(--color-text-muted)' }}>Telusuri daftar dokter spesialis kami. Gunakan filter spesialisasi dan jadwal yang tersedia untuk menemukan dokter yang sesuai dengan kebutuhan Anda.</p>
             </motion.div>
 
             <div style={{ 
