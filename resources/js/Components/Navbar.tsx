@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { HeartPulse } from 'lucide-react';
+import { HeartPulse, Menu, X } from 'lucide-react';
 import type { SharedProps } from '../types';
 
 interface NavLink {
@@ -16,6 +17,7 @@ interface NavbarProps {
 export default function Navbar({ navLinks, authLinks }: NavbarProps) {
     const { url, props } = usePage<SharedProps>();
     const appName = props.appName || 'MedSync Pro';
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     
     const { scrollY } = useScroll();
     const navBackground = useTransform(
@@ -59,7 +61,22 @@ export default function Navbar({ navLinks, authLinks }: NavbarProps) {
                     {appName}
                 </Link>
 
-                <div className="guest-navigation" style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
+                <button 
+                    className="mobile-menu-toggle"
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    style={{
+                        width: '40px', height: '40px', borderRadius: '12px',
+                        border: '1px solid var(--color-border)',
+                        background: 'transparent',
+                        placeItems: 'center',
+                        cursor: 'pointer', color: 'var(--color-primary)',
+                        display: 'none',
+                    }}
+                >
+                    {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+
+                <div className={`guest-navigation ${isMobileMenuOpen ? 'mobile-open' : 'guest-navigation-desktop'}`}>
                     <ul className="navbar-links" style={{ display: 'flex', gap: '1.5rem', listStyle: 'none', margin: 0, padding: 0 }}>
                         {navLinks.map((link) => {
                             const isActive = url === link.href;

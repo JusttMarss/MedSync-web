@@ -13,6 +13,8 @@ interface NavLink {
 interface SidebarProps {
     authLinks: NavLink[];
     roleLabel?: string;
+    isOpen?: boolean;
+    onClose?: () => void;
 }
 
 function getIcon(label: string) {
@@ -33,7 +35,7 @@ function getInitials(name: string) {
     return name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
 }
 
-export default function Sidebar({ authLinks, roleLabel }: SidebarProps) {
+export default function Sidebar({ authLinks, roleLabel, isOpen, onClose }: SidebarProps) {
     const { url, props } = usePage<SharedProps>();
     const user = props.auth?.user;
 
@@ -42,7 +44,8 @@ export default function Sidebar({ authLinks, roleLabel }: SidebarProps) {
     }
 
     return (
-        <aside className="app-sidebar">
+        <>
+        <aside className={`app-sidebar ${isOpen ? 'open' : ''}`}>
             {/* Brand */}
             <div className="app-sidebar-brand">
                 <div style={{
@@ -135,5 +138,7 @@ export default function Sidebar({ authLinks, roleLabel }: SidebarProps) {
                 </button>
             </div>
         </aside>
+        <div className={`sidebar-overlay ${isOpen ? 'open' : ''}`} onClick={onClose} />
+        </>
     );
 }

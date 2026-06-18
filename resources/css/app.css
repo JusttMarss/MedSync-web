@@ -67,6 +67,7 @@
 html {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
 }
 
 body {
@@ -75,6 +76,7 @@ body {
     color: var(--color-text);
     line-height: 1.6;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 a {
@@ -116,7 +118,7 @@ img {
 .guest-navigation {
     display: flex;
     align-items: center;
-    gap: 1.25rem;
+    gap: 2rem;
 }
 
 .app-shell {
@@ -749,16 +751,83 @@ img {
 
 @media (max-width: 1024px) {
     .app-sidebar {
-        position: relative;
-        width: 100%;
-        height: auto;
-        border-right: none;
-        border-bottom: 1px solid var(--color-border);
+        position: fixed;
+        left: -100%;
+        top: 0;
+        width: 280px;
+        height: 100vh;
+        z-index: 100;
+        transition: left 0.3s ease;
+        box-shadow: var(--shadow-card);
+    }
+    .app-sidebar.open {
+        left: 0;
+    }
+    
+    .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.5);
+        backdrop-filter: blur(4px);
+        z-index: 90;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+    .sidebar-overlay.open {
+        opacity: 1;
+        pointer-events: auto;
     }
 
     .app-main {
         margin-left: 0;
     }
+
+    .guest-navigation-desktop {
+        display: none !important;
+    }
+    
+    .guest-navigation.mobile-open {
+        display: flex !important;
+        position: absolute;
+        top: 72px;
+        left: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        flex-direction: column;
+        padding: 2rem;
+        gap: 1.5rem;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        border-bottom: 1px solid var(--color-border);
+    }
+    .guest-navigation.mobile-open .navbar-links {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+    .guest-navigation.mobile-open .guest-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    .guest-navigation.mobile-open .guest-actions .btn {
+        width: 100%;
+    }
+
+    .mobile-menu-toggle {
+        display: grid !important;
+    }
+}
+
+@media (min-width: 1025px) {
+    .mobile-menu-toggle {
+        display: none !important;
+    }
+    .sidebar-overlay {
+        display: none !important;
+    }
+
 
     .app-content {
         padding: 1.5rem;

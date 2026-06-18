@@ -1,5 +1,5 @@
 import { usePage, Link } from '@inertiajs/react';
-import { Bell, Search } from 'lucide-react';
+import { Bell, Search, Menu } from 'lucide-react';
 import type { SharedProps } from '../types';
 
 function getGreeting(): string {
@@ -27,19 +27,36 @@ function formatDate() {
     });
 }
 
-export default function Topbar() {
+export default function Topbar({ onToggleSidebar }: { onToggleSidebar?: () => void }) {
     const { props } = usePage<SharedProps>();
     const user = props.auth?.user;
     const badge = getRoleBadge(user?.role);
 
     return (
         <header className="app-topbar">
-            <div>
-                <span className="app-breadcrumb">{getGreeting()},</span>
-                <h1 className="app-topbar-title">{user?.name || 'Pengguna'}</h1>
-                <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginTop: '0.15rem' }}>
-                    {formatDate()}
-                </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                <button 
+                    className="mobile-menu-toggle"
+                    onClick={onToggleSidebar}
+                    style={{
+                        width: '40px', height: '40px', borderRadius: '12px',
+                        border: '1px solid var(--color-border)',
+                        background: 'var(--color-surface)',
+                        placeItems: 'center',
+                        cursor: 'pointer', color: 'var(--color-text-muted)',
+                        transition: 'all 0.2s ease',
+                        display: 'none', // Hidden on desktop, shown on mobile via CSS
+                    }}
+                >
+                    <Menu size={20} />
+                </button>
+                <div>
+                    <span className="app-breadcrumb">{getGreeting()},</span>
+                    <h1 className="app-topbar-title">{user?.name || 'Pengguna'}</h1>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', marginTop: '0.15rem' }}>
+                        {formatDate()}
+                    </p>
+                </div>
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>

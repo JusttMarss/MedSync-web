@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { usePage } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { SharedProps } from '../types';
@@ -52,6 +52,7 @@ function getRoleLabel(role: string | null | undefined): string {
 
 export default function MainLayout({ children }: MainLayoutProps) {
     const { props, url } = usePage<SharedProps>();
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const navLinks = [
         { href: '/',        label: 'Home' },
@@ -72,10 +73,10 @@ export default function MainLayout({ children }: MainLayoutProps) {
             <IntroAnimation />
             {props.auth?.user ? (
                 <div className="app-shell">
-                    <Sidebar authLinks={authLinks} roleLabel={roleLabel} />
+                    <Sidebar authLinks={authLinks} roleLabel={roleLabel} isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
                     <div className="app-main">
-                        <Topbar />
+                        <Topbar onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
 
                         <AnimatePresence mode="wait">
                             <motion.main
