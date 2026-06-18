@@ -1,9 +1,7 @@
-import { Link, usePage } from '@inertiajs/react';
-import type { SharedProps } from '../types';
+import { Link } from '@inertiajs/react';
 
 export default function Footer() {
-    const { props } = usePage<SharedProps>();
-    const appName = props.appName || 'Healthcare App';
+    const appName = 'MedSync Pro';
 
     return (
         <footer className="guest-footer" style={{ borderTop: '1px solid var(--border-color)', padding: '2rem 5%', marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'var(--surface-color)' }}>

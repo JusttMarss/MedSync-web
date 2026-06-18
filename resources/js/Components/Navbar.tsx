@@ -15,7 +15,7 @@ interface NavbarProps {
 
 export default function Navbar({ navLinks, authLinks }: NavbarProps) {
     const { url, props } = usePage<SharedProps>();
-    const appName = props.appName || 'MedSync Pro';
+    const appName = 'MedSync Pro';
     
     const { scrollY } = useScroll();
     const navBackground = useTransform(

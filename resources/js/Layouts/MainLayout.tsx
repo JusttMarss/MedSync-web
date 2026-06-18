@@ -26,13 +26,11 @@ function getAuthLinks(role: string | null | undefined) {
             return [
                 { href: '/dashboard', label: 'Dashboard' },
                 { href: '/medical-records', label: 'Medical Records' },
-                { href: '/profile', label: 'Profile' },
             ];
         case 'doctor':
             return [
                 { href: '/dashboard', label: 'Dashboard' },
                 { href: '/medical-records', label: 'Medical Records' },
-                { href: '/profile', label: 'Profile' },
             ];
         default: // patient
             return [
@@ -40,7 +38,6 @@ function getAuthLinks(role: string | null | undefined) {
                 { href: '/appointments', label: 'Appointments' },
                 { href: '/schedule', label: 'Schedule' },
                 { href: '/medical-records', label: 'Medical Records' },
-                { href: '/profile', label: 'Profile' },
             ];
     }
 }

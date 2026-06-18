@@ -9,6 +9,7 @@ interface DoctorSchedule {
     specialization?: string;
     totalSlots: number;
     availableSlots: number;
+    avatar_url?: string;
 }
 
 interface ScheduleProps {
@@ -91,7 +92,15 @@ function DoctorScheduleCard({ doctor }: { doctor: DoctorSchedule }) {
             {/* Header */}
             <div className="doctor-card-header" style={{ marginBottom: '1rem' }}>
                 <div className="doctor-avatar">
-                    {getInitials(doctor.name ?? '')}
+                    {doctor.avatar_url ? (
+                        <img
+                            src={doctor.avatar_url}
+                            alt={doctor.name}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+                        />
+                    ) : (
+                        getInitials(doctor.name ?? '')
+                    )}
                 </div>
                 <div className="doctor-info">
                     <h3 style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--color-text)', marginBottom: '0.2rem' }}>

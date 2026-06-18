@@ -7,7 +7,6 @@ import HowItWorksSection from '../Components/HowItWorksSection';
 import SpecializationSection from '../Components/SpecializationSection';
 import WhyUsSection from '../Components/WhyUsSection';
 import TodaySlotsSection from '../Components/TodaySlotsSection';
-import TestimoniSection from '../Components/TestimoniSection';
 import FaqSection from '../Components/FaqSection';
 import CtaBannerSection from '../Components/CtaBannerSection';
 import type { Doctor, Stats } from '../types';
@@ -31,7 +30,6 @@ export default function Home({ stats, featuredDoctors, todaySlots }: HomeProps) 
             <WhyUsSection />
             <TodaySlotsSection slots={todaySlots} />
             <DoctorListSection doctors={featuredDoctors} />
-            <TestimoniSection />
             <FaqSection />
             <CtaBannerSection />
         </MainLayout>

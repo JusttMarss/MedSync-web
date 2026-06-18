@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/doctors', [PageController::class, 'doctors'])->name('doctors');
+Route::get('/doctors/{id}', [PageController::class, 'doctorProfile'])->name('doctor.profile');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [WebAuthController::class, 'showLogin'])->name('login');
@@ -28,7 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/schedule', [PageController::class, 'schedule'])->name('schedule');
     Route::get('/schedule/{id}', [PageController::class, 'scheduleDetail'])->name('schedule.detail');
     Route::get('/profile', [PageController::class, 'profile'])->name('profile');
-    Route::put('/profile/update', [PageController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/profile/update', [PageController::class, 'updateProfile'])->name('profile.update');
     Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
     Route::get('/medical-records', [PageController::class, 'medicalRecords'])->name('medical-records');
 

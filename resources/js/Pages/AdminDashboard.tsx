@@ -259,8 +259,16 @@ export default function AdminDashboard({
                                                     <tr key={apt.id}>
                                                         <td>
                                                             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                                                <div className="appointment-mini-avatar" style={{ width: '32px', height: '32px', fontSize: '0.75rem' }}>
-                                                                    {apt.patient?.charAt(0) || '?'}
+                                                                <div className="appointment-mini-avatar" style={{ width: '32px', height: '32px', fontSize: '0.75rem', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                                    {apt.patient_avatar_url ? (
+                                                                        <img
+                                                                            src={apt.patient_avatar_url}
+                                                                            alt={apt.patient}
+                                                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                                        />
+                                                                    ) : (
+                                                                        apt.patient?.charAt(0) || '?'
+                                                                    )}
                                                                 </div>
                                                                 <span style={{ fontWeight: 600 }}>{apt.patient || 'N/A'}</span>
                                                             </div>
@@ -308,8 +316,16 @@ export default function AdminDashboard({
                                     <div className="appointment-mini-list">
                                         {recentPatients.map((patient) => (
                                             <div key={patient.id} className="appointment-mini-item">
-                                                <div className="appointment-mini-avatar">
-                                                    {patient.name?.charAt(0) || '?'}
+                                                <div className="appointment-mini-avatar" style={{ overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                    {patient.avatar_url ? (
+                                                        <img
+                                                            src={patient.avatar_url}
+                                                            alt={patient.name}
+                                                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                                                        />
+                                                    ) : (
+                                                        patient.name?.charAt(0) || '?'
+                                                    )}
                                                 </div>
                                                 <div className="appointment-mini-info">
                                                     <div className="appointment-mini-name">{patient.name}</div>

@@ -1,4 +1,4 @@
-import { usePage } from '@inertiajs/react';
+import { usePage, Link } from '@inertiajs/react';
 import { Bell, Search } from 'lucide-react';
 import type { SharedProps } from '../types';
 
@@ -56,21 +56,35 @@ export default function Topbar() {
                 </button>
 
                 {/* User Chip */}
-                <div style={{
+                <Link href="/profile" style={{
                     display: 'flex', alignItems: 'center', gap: '0.6rem',
                     padding: '0.5rem 0.75rem',
                     border: '1px solid var(--color-border)',
                     borderRadius: 'var(--radius-full)',
                     background: 'var(--color-surface)',
+                    textDecoration: 'none',
+                    cursor: 'pointer',
                 }}>
-                    <div style={{
-                        width: '30px', height: '30px', borderRadius: '50%',
-                        background: 'var(--gradient-button)',
-                        color: '#fff', fontWeight: 700, fontSize: '0.75rem',
-                        display: 'grid', placeItems: 'center',
-                    }}>
-                        {getInitials(user?.name || '?')}
-                    </div>
+                    {user?.avatar_url ? (
+                        <img
+                            src={user.avatar_url}
+                            alt={user.name}
+                            style={{
+                                width: '30px', height: '30px', borderRadius: '50%',
+                                objectFit: 'cover',
+                                border: '2px solid var(--color-border)',
+                            }}
+                        />
+                    ) : (
+                        <div style={{
+                            width: '30px', height: '30px', borderRadius: '50%',
+                            background: 'var(--gradient-button)',
+                            color: '#fff', fontWeight: 700, fontSize: '0.75rem',
+                            display: 'grid', placeItems: 'center',
+                        }}>
+                            {getInitials(user?.name || '?')}
+                        </div>
+                    )}
                     <div>
                         <p style={{ fontWeight: 700, fontSize: '0.82rem', color: 'var(--color-text)', lineHeight: 1.2 }}>
                             {user?.name?.split(' ')[0]}
@@ -85,7 +99,7 @@ export default function Topbar() {
                             {badge.label}
                         </span>
                     </div>
-                </div>
+                </Link>
             </div>
         </header>
     );
