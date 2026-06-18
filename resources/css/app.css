@@ -447,7 +447,6 @@ img {
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    grid-auto-flow: column;
     gap: 1.5rem;
 }
 
@@ -1034,6 +1033,93 @@ img {
     text-transform: uppercase;
     letter-spacing: 0.05em;
     font-weight: 500;
+}
+
+/* ─── Stats Section Responsive ─────────────────────────────────── */
+
+/* Tablet landscape & below: fluid 2-col or 1-col */
+@media (max-width: 768px) {
+    .stats-section {
+        padding: 2rem 1.25rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+    }
+
+    .stat-card {
+        padding: 1.5rem 1.25rem;
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 0.75rem;
+    }
+
+    .stat-number {
+        font-size: 2rem;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+    }
+}
+
+/* Small tablet / large phone: 2-column grid */
+@media (max-width: 640px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .stat-card {
+        padding: 1.25rem 1rem;
+    }
+
+    .stat-number {
+        font-size: 1.75rem;
+    }
+}
+
+/* Phone: single column stack */
+@media (max-width: 480px) {
+    .stats-section {
+        padding: 1.5rem 1rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .stat-card {
+        padding: 1.25rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        text-align: left;
+        gap: 1rem;
+    }
+
+    .stat-card .stat-icon {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        margin: 0;
+        border-radius: 12px;
+    }
+
+    .stat-card .stat-number {
+        font-size: 1.5rem;
+        line-height: 1.2;
+    }
+
+    .stat-card .stat-label {
+        font-size: 0.75rem;
+        margin-top: 0.15rem;
+    }
 }
 
 /* ─── Section Generic ──────────────────────────────────────────── */
