@@ -33,8 +33,8 @@ export default function HeroSection() {
             }}
         >
             {/* max-width container */}
-            <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '5rem 2.5rem 4rem' }}>
-                <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', gap: '4rem' }}>
+            <div style={{ maxWidth: '1200px', margin: '0 auto', padding: 'clamp(2rem, 5vw, 5rem) clamp(1rem, 5vw, 2.5rem) clamp(2rem, 5vw, 4rem)' }}>
+                <div className="hero-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', alignItems: 'center', gap: 'clamp(2rem, 5vw, 4rem)' }}>
 
                     {/* ── Left copy ── */}
                     <motion.div variants={containerVariants} initial="hidden" animate="visible">

@@ -28,7 +28,7 @@ export default function StatsSection({ stats }: StatsSectionProps) {
 
     return (
         <section className="section stats-section" style={{ padding: '2rem 0 4rem' }}>
-            <div className="stats-grid grid-flow-col" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem', position: 'relative' }}>
+            <div className="stats-grid grid-flow-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem', position: 'relative' }}>
                 {statItems.map((item, index) => (
                     <motion.div 
                         key={index}

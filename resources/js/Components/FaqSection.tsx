@@ -86,9 +86,9 @@ export default function FaqSection() {
     const [openIndex, setOpenIndex] = useState<number | null>(0);
 
     return (
-        <section style={{ padding: '5rem 0', background: 'var(--color-surface-solid)' }}>
-            <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2.5rem' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: '4rem', alignItems: 'start' }}>
+        <section style={{ padding: 'clamp(3rem, 5vw, 5rem) 0', background: 'var(--color-surface-solid)' }}>
+            <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 clamp(1rem, 4vw, 2.5rem)' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '3rem', alignItems: 'start' }}>
                     {/* Left sticky header */}
                     <motion.div
                         initial={{ opacity: 0, x: -20 }}

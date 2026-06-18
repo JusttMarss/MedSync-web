@@ -41,8 +41,8 @@ const cardVariants = {
 
 export default function HowItWorksSection() {
     return (
-        <section style={{ padding: '5rem 0', background: 'var(--color-background)' }}>
-            <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2.5rem' }}>
+        <section style={{ padding: 'clamp(3rem, 5vw, 5rem) 0', background: 'var(--color-background)' }}>
+            <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 clamp(1rem, 4vw, 2.5rem)' }}>
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -77,7 +77,7 @@ export default function HowItWorksSection() {
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: '-50px' }}
-                    style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.5rem', position: 'relative' }}
+                    style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', position: 'relative' }}
                 >
                     {steps.map((step, i) => (
                         <motion.div

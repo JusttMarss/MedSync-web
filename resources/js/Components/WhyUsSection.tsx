@@ -35,8 +35,8 @@ const cardVariants = {
 
 export default function WhyUsSection() {
     return (
-        <section style={{ padding: '5rem 0', background: 'var(--color-background)' }}>
-            <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2.5rem' }}>
+        <section style={{ padding: 'clamp(3rem, 5vw, 5rem) 0', background: 'var(--color-background)' }}>
+            <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 clamp(1rem, 4vw, 2.5rem)' }}>
                 {/* Header */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}

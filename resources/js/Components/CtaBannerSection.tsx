@@ -4,7 +4,7 @@ import { HeartPulse, ArrowRight } from 'lucide-react';
 
 export default function CtaBannerSection() {
     return (
-        <section style={{ padding: '3rem 2.5rem 5rem' }}>
+        <section style={{ padding: 'clamp(2rem, 4vw, 3rem) clamp(1rem, 4vw, 2.5rem) clamp(3rem, 5vw, 5rem)' }}>
             <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
@@ -14,7 +14,7 @@ export default function CtaBannerSection() {
                     style={{
                         background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%)',
                         borderRadius: '28px',
-                        padding: '4rem 3rem',
+                        padding: 'clamp(2rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3rem)',
                         textAlign: 'center',
                         position: 'relative',
                         overflow: 'hidden',
