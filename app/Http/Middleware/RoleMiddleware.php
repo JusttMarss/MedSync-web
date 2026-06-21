@@ -15,7 +15,10 @@ class RoleMiddleware
             ], 401);
         }
 
-        if (!in_array($request->user()->role, $roles)) {
+        $userRole = $request->user()->role;
+        $userRoleStr = $userRole instanceof \BackedEnum ? $userRole->value : (string) $userRole;
+
+        if (!in_array($userRoleStr, $roles)) {
             return response()->json([
                 'message' => 'Forbidden - insufficient role'
             ], 403);
