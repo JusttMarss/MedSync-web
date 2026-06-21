@@ -26,7 +26,7 @@ class MedicalRecordController extends Controller
         }
 
         // Pastikan appointment sudah selesai
-        if ($appointment->status !== 'done') {
+        if ($appointment->status !== \App\Enums\AppointmentStatusEnum::COMPLETED->value) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Rekam medis hanya bisa dibuat untuk appointment yang sudah selesai.',

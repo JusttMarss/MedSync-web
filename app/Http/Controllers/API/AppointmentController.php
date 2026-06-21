@@ -173,18 +173,39 @@ class AppointmentController extends Controller
         $doctor = $request->user()->doctor;
         $appointment = Appointment::where('doctor_id', $doctor->id)->findOrFail($id);
 
-        if ($appointment->status !== AppointmentStatusEnum::CONFIRMED) {
+        if ($appointment->status !== AppointmentStatusEnum::CONFIRMED && $appointment->status !== AppointmentStatusEnum::CONFIRMED->value) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Hanya appointment yang sudah di-approve yang bisa ditandai selesai.',
             ], 422);
         }
 
-        $appointment->update(['status' => AppointmentStatusEnum::COMPLETED->value]);
+        $request->validate([
+            'diagnosis' => 'nullable|string',
+            'treatment' => 'nullable|string',
+            'medications' => 'nullable|string',
+            'notes' => 'nullable|string',
+        ]);
+
+        DB::transaction(function () use ($appointment, $request, $doctor) {
+            $appointment->update(['status' => AppointmentStatusEnum::COMPLETED->value]);
+
+            \App\Models\MedicalRecord::updateOrCreate(
+                ['appointment_id' => $appointment->id],
+                [
+                    'patient_id' => $appointment->patient_id,
+                    'doctor_id' => $doctor->id,
+                    'diagnosis' => $request->diagnosis,
+                    'treatment' => $request->treatment,
+                    'medications' => $request->medications ? array_map('trim', explode(',', $request->medications)) : null,
+                    'notes' => $request->notes,
+                ]
+            );
+        });
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Appointment ditandai selesai.',
+            'message' => 'Appointment ditandai selesai dan rekam medis disimpan.',
             'data' => new AppointmentResource($appointment->load(['patient.user', 'timeSlot'])),
         ]);
     }
