@@ -9,9 +9,14 @@ class AppointmentResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        return [
+        // Disable expensive schedule loading for nested doctor resource
+        DoctorResource::$withSchedule = false;
+
+        $data = [
             'id'        => $this->id,
-            'status'    => $this->status,
+            'status'    => $this->status instanceof \App\Enums\AppointmentStatusEnum
+                ? $this->status->value
+                : $this->status,
             'notes'     => $this->notes,
             'patient'   => new PatientResource($this->whenLoaded('patient')),
             'doctor'    => new DoctorResource($this->whenLoaded('doctor')),
@@ -19,5 +24,10 @@ class AppointmentResource extends JsonResource
             'created_at' => $this->created_at?->toDateTimeString(),
             'updated_at' => $this->updated_at?->toDateTimeString(),
         ];
+
+        // Restore schedule loading for other contexts
+        DoctorResource::$withSchedule = true;
+
+        return $data;
     }
 }
