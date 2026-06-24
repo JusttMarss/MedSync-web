@@ -7,16 +7,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class DoctorResource extends JsonResource
 {
-    /**
-     * Flag to skip loading the expensive schedule (timeSlots query).
-     * Set to true when embedding DoctorResource inside AppointmentResource
-     * to avoid N+1 query explosion.
-     */
-    public static bool $withSchedule = true;
-
     public function toArray(Request $request): array
     {
-        $data = [
+        return [
             'id'             => $this->id,
             'user_id'        => $this->user_id,
             'name'           => $this->user?->name,
@@ -25,11 +18,7 @@ class DoctorResource extends JsonResource
             'phone'          => $this->phone,
             'bio'            => $this->bio,
             'is_active'      => $this->user?->is_active,
-            'created_at'     => $this->created_at?->toDateTimeString(),
-        ];
-
-        if (static::$withSchedule) {
-            $data['schedule'] = $this->timeSlots()
+            'schedule'       => $this->timeSlots()
                 ->where('date', '>=', now()->toDateString())
                 ->orderBy('date')
                 ->orderBy('start_time')
@@ -46,11 +35,8 @@ class DoctorResource extends JsonResource
                     $start = substr($slot->start_time, 0, 5);
                     $end = substr($slot->end_time, 0, 5);
                     return "{$dayName}, {$formattedDate} ({$start} - {$end})";
-                })->toArray();
-        } else {
-            $data['schedule'] = [];
-        }
-
-        return $data;
+                })->toArray(),
+            'created_at'     => $this->created_at?->toDateTimeString(),
+        ];
     }
 }
