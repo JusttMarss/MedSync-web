@@ -108,4 +108,89 @@ class TimeSlotController extends Controller
             'message' => 'Jadwal berhasil dihapus.',
         ]);
     }
+
+    // GET /admin/doctors/{doctorId}/slots
+    public function adminIndex(Request $request, $doctorId)
+    {
+        $slots = TimeSlot::where('doctor_id', $doctorId)
+            ->when($request->filled('date'), fn($q) => $q->whereDate('date', $request->date))
+            ->when($request->filled('is_booked'), fn($q) => $q->where('is_booked', filter_var($request->is_booked, FILTER_VALIDATE_BOOLEAN)))
+            ->orderBy('date')
+            ->orderBy('start_time')
+            ->get();
+
+        return TimeSlotResource::collection($slots);
+    }
+
+    // POST /admin/doctors/{doctorId}/slots
+    public function adminStore(StoreTimeSlotRequest $request, $doctorId)
+    {
+        // Cek apakah slot sudah ada
+        $exists = TimeSlot::where('doctor_id', $doctorId)
+            ->where('date', $request->date)
+            ->where('start_time', $request->start_time)
+            ->exists();
+
+        if ($exists) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Jadwal pada waktu tersebut sudah ada.',
+            ], 422);
+        }
+
+        $slot = TimeSlot::create([
+            'doctor_id' => $doctorId,
+            'date' => $request->date,
+            'start_time' => $request->start_time,
+            'end_time' => $request->end_time,
+            'is_booked' => false,
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Jadwal berhasil ditambahkan.',
+            'data' => new TimeSlotResource($slot),
+        ], 201);
+    }
+
+    // PUT /admin/slots/{id}
+    public function adminUpdate(StoreTimeSlotRequest $request, $id)
+    {
+        $slot = TimeSlot::findOrFail($id);
+
+        if ($slot->is_booked) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Jadwal yang sudah dipesan tidak dapat diubah.',
+            ], 422);
+        }
+
+        $slot->update($request->only(['date', 'start_time', 'end_time']));
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Jadwal berhasil diperbarui.',
+            'data' => new TimeSlotResource($slot),
+        ]);
+    }
+
+    // DELETE /admin/slots/{id}
+    public function adminDestroy(Request $request, $id)
+    {
+        $slot = TimeSlot::findOrFail($id);
+
+        if ($slot->is_booked) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Jadwal yang sudah dipesan tidak dapat dihapus.',
+            ], 422);
+        }
+
+        $slot->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Jadwal berhasil dihapus.',
+        ]);
+    }
 }

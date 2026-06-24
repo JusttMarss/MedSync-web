@@ -63,6 +63,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/appointments/{id}/approve',       [AppointmentController::class, 'approve']);
         Route::patch('/appointments/{id}/reject',        [AppointmentController::class, 'reject']);
 
+        // ── Manajemen Jadwal Dokter (Admin) ───────────────────────
+        Route::get('/doctors/{doctorId}/slots',          [TimeSlotController::class, 'adminIndex']);
+        Route::post('/doctors/{doctorId}/slots',         [TimeSlotController::class, 'adminStore']);
+        Route::put('/slots/{id}',                        [TimeSlotController::class, 'adminUpdate']);
+        Route::delete('/slots/{id}',                     [TimeSlotController::class, 'adminDestroy']);
+
         // ── Rekam Medis ───────────────────────────────────────────
         Route::get('/medical-records',                   [MedicalRecordController::class, 'index']);
         Route::get('/medical-records/{id}',              [MedicalRecordController::class, 'showAdmin']);
